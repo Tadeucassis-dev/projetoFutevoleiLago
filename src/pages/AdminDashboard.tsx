@@ -1,14 +1,21 @@
-import { Box, Heading, useToast } from '@chakra-ui/react';
+import { Box, Heading, useColorModeValue, useToast } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { getStudents } from '../services/api';
 import StudentTable from '../components/StudentTable';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import { Student } from '../types';
 
 function AdminDashboard() {
   const [students, setStudents] = useState<Student[]>([]);
   const toast = useToast();
+
+   // Definir cores baseadas no modo claro/escuro
+    const bgGradient = useColorModeValue(
+      "linear(to-b, blue.100, orange.100)",
+      "linear(to-b, blue.900, orange.900)"
+    );
+    const textColor = useColorModeValue("gray.800", "white");
+    const buttonBg = useColorModeValue("Yellow.700", "Yellow.600");
+    const buttonHoverBg = useColorModeValue("Yellow.500", "Yellow.400");
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -37,13 +44,21 @@ function AdminDashboard() {
   };
 
   return (
-    <Box minH="100vh" display="flex" flexDirection="column">
-      <Header />
+    <Box 
+      height="100vh"
+      bgGradient={bgGradient}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      px={{ base: 4, md: 8 }}
+      py={12}
+    >
+      
       <Box flex="1" maxW="1200px" mx="auto" p={8}>
         <Heading mb={6}>Painel do Administrador</Heading>
         <StudentTable students={students} onApprove={handleApprove} />
       </Box>
-      <Footer />
+      
     </Box>
   );
 }

@@ -5,15 +5,8 @@ import { User } from '../types';
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-interface AuthContextType {
-  user: User | null;
-  login: (username: string, password: string) => Promise<void>;
-  register: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -23,26 +16,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
-  const loginFn = async (username: string, password: string) => {
+  const loginFn = async (email: string, password: string) => {
     try {
-      const response = await login(username, password);
+      const response = await login(email, password);
       localStorage.setItem('token', response.token);
       setUser(response.user);
-      const isAdmin = response.user.roles.some((role: { name: string; }) => role.name === 'ROLE_ADMIN');
-      navigate(isAdmin ? '/admin' : '/');
+      const isAdmin = response.user.roles.some((role: { name: string }) => role.name === 'ROLE_ADMIN');
+      navigate('/form');
     } catch (error) {
-      throw new Error('Login failed');
+      throw new Error('Falha no login');
     }
   };
 
-  const registerFn = async (username: string, password: string) => {
+  const registerFn = async (name: string, email: string, password: string) => {
     try {
-      const response = await register(username, password);
+      const response = await register(name, email, password);
       localStorage.setItem('token', response.token);
       setUser(response.user);
-      navigate('/');
+      navigate('/login'); // Redireciona para login após registro
     } catch (error) {
-      throw new Error('Registration failed');
+      throw error; // Propaga o erro para o componente lidar
     }
   };
 
@@ -62,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
   }
   return context;
 };

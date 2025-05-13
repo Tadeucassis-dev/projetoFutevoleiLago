@@ -16,14 +16,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-export const login = async (username: string, password: string) => {
-  const response = await api.post('/auth/login', { username, password });
-  return response.data; // Retorne o token e as informações do usuário
+export const login = async (email: string, password: string) => {
+  const response = await api.post('/auth/login', { email, password });
+  return response.data; // Espera { token, user }
 };
 
-export const register = async (username: string, password: string) => {
-  const response = await api.post('/auth/register', { username, password });
-  return response.data;
+export const register = async (name: string, email: string, password: string) => {
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('password', password);
+
+  const response = await api.post('/user/register', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data; // Espera { token, user } ou apenas o usuário
 };
 
 export const getHome = async () => {

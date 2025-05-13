@@ -1,8 +1,9 @@
 export interface User {
-    id: number;
-    username: string;
-    roles: { id: number; name: string }[];
-  }
+  id: number;
+  name: string;
+  email: string;
+  roles: { name: string }[];
+}
   
   export interface Student {
     id: number;

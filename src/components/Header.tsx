@@ -1,30 +1,36 @@
 import { Box, Flex, Heading, Button, useColorMode, Image } from '@chakra-ui/react';
 import { useAuth } from '../contexts/AuthContext';
-import logo from '../assets/logoftv.jpg';
 
 function Header() {
   const { user, logout } = useAuth();
-  const { toggleColorMode } = useColorMode();
 
   return (
-    <Box bg="brand.500" p={4} color="white">
-      <Flex align="center" justify="space-between" maxW="1200px" mx="auto">
+    <Box 
+      as="header"
+      bg="blue.400"
+      p="4px"
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      zIndex={10}
+      h="68px" // Altura fixa
+     >
+      <Flex justify="space-between" align="center" h="100%" >
         <Flex align="center">
-          <Image src={logo} alt="Logo" boxSize="40px" mr={2} />
-          <Heading size="md">Escolinha de Futevôlei</Heading>
+          <Image src="../../public/logoftv1.png" alt="Logo" boxSize="60px"  />
+          <Heading size="md" color={"white"}>Projeto Futevôlei do lago</Heading>
         </Flex>
         <Flex align="center">
           {user && (
             <>
               <Box mr={4}>Bem-vindo, {user.username}</Box>
-              <Button onClick={logout} mr={2} variant="outline" colorScheme="whiteAlpha">
+              <Button onClick={logout} mr={2} variant="outline" >
                 Sair
               </Button>
             </>
           )}
-          <Button onClick={toggleColorMode} variant="outline" colorScheme="whiteAlpha">
-            Alternar Modo
-          </Button>
+        
         </Flex>
       </Flex>
     </Box>
