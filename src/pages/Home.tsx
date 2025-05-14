@@ -61,7 +61,7 @@ export function Home() {
         <Button
           bgColor={"yellow.500"}
           as={Link}
-          to="/register"
+          to="/form"
           bg={buttonBg}
           color="white"
           size="lg"

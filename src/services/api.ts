@@ -10,7 +10,9 @@ const api = axios.create({
 // Interceptor para adicionar token de autenticação
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token) {
+  if (token && !config.url?.includes('/user/register') && 
+      !config.url?.includes('/user/register-student') && 
+      !config.url?.includes('/auth/')) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -28,11 +30,9 @@ export const register = async (name: string, email: string, password: string) =>
   formData.append('password', password);
 
   const response = await api.post('/user/register', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
-  return response.data; // Espera { token, user } ou apenas o usuário
+  return response.data; // Espera { token, user }
 };
 
 export const getHome = async () => {

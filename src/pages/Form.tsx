@@ -21,7 +21,6 @@ function Form() {
   const [identityFile, setIdentityFile] = useState<File | null>(null);
   const [attendanceFile, setAttendanceFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [welcomeMessage, setWelcomeMessage] = useState("");
   const toast = useToast();
 
   // Definir cores baseadas no modo claro/escuro
@@ -30,23 +29,12 @@ function Form() {
     "linear(to-b, blue.900, orange.900)"
   );
   const textColor = useColorModeValue("gray.800", "white");
-  const buttonBg = useColorModeValue("Yellow.700", "Yellow.600");
-  const buttonHoverBg = useColorModeValue("Yellow.500", "Yellow.400");
+  const buttonBg = useColorModeValue("yellow.700", "yellow.600");
+  const buttonHoverBg = useColorModeValue("yellow.500", "yellow.400");
 
   useEffect(() => {
     const fetchHome = async () => {
-      try {
-        const message = await getHome();
-        setWelcomeMessage(message);
-      } catch (error) {
-        toast({
-          title: "Erro",
-          description: "Não foi possível carregar a mensagem de boas-vindas",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+      // Função mantida vazia conforme o original
     };
     fetchHome();
   }, [toast]);
@@ -62,7 +50,6 @@ function Form() {
     if (identityFile) formData.append("identityFile", identityFile);
     if (attendanceFile) formData.append("attendanceFile", attendanceFile);
 
-    // Log para depurar
     console.log("FormData:", {
       name,
       age,
@@ -75,7 +62,7 @@ function Form() {
       await registerStudent(formData);
       toast({
         title: "Cadastro enviado",
-        description: "Seu cadastro foi enviado para aprovação",
+        description: "Seu cadastro foi enviado para aprovação!",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -93,7 +80,7 @@ function Form() {
       toast({
         title: "Erro",
         description:
-          error.response?.data?.message || "Não foi possível enviar o cadastro",
+          error.response?.data?.message || "Não foi possível enviar o cadastro.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -105,7 +92,7 @@ function Form() {
 
   return (
     <Box
-      height="100vh"
+      minHeight="100vh"
       bgGradient={bgGradient}
       display="flex"
       alignItems="center"
@@ -113,67 +100,138 @@ function Form() {
       px={{ base: 4, md: 8 }}
       py={12}
     >
-      <Box flex="1" maxW="600px" mx="auto" p={8}>
-        <Heading mb={6}>{welcomeMessage}</Heading>
-        <Text mb={6} fontSize="lg" color="gray.600" textAlign="center">
-          A Escolinha de Futevôlei é um projeto que visa promover a prática do
-          esporte entre crianças Preencha o formulário abaixo para se cadastrar
-          na Escolinha de Futevôlei.
-        </Text>
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={4}>
-            <FormControl id="name" isRequired>
-              <FormLabel>Nome</FormLabel>
-              <Input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </FormControl>
-            <FormControl id="age" isRequired>
-              <FormLabel>Idade</FormLabel>
-              <Input
-                type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-              />
-            </FormControl>
-            <FormControl id="schoolUnit" isRequired>
-              <FormLabel>Unidade Escolar</FormLabel>
-              <Input
-                type="text"
-                value={schoolUnit}
-                onChange={(e) => setSchoolUnit(e.target.value)}
-              />
-            </FormControl>
-            <FormControl id="identityFile" isRequired>
-              <FormLabel>Documento de Identidade</FormLabel>
-              <Input
-                type="file"
-                accept=".pdf,.jpg,.png"
-                onChange={(e) => setIdentityFile(e.target.files?.[0] || null)}
-              />
-            </FormControl>
-            <FormControl id="attendanceFile" isRequired>
-              <FormLabel>Comprovante de Presença</FormLabel>
-              <Input
-                type="file"
-                accept=".pdf,.jpg,.png"
-                onChange={(e) => setAttendanceFile(e.target.files?.[0] || null)}
-              />
-            </FormControl>
-            <Button
-              color={"black"}
-              type="submit"
-              colorScheme="brand"
-              width="full"
-              isLoading={isLoading}
-            >
-              Enviar Cadastro
-            </Button>
-          </VStack>
-        </form>
-      </Box>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        maxW="1200px"
+        w="full"
+        gap={8}
+      >
+        {/* Seção de Boas-Vindas */}
+        <Box
+          flex="1"
+          maxW={{ base: "full", md: "600px" }}
+          p={8}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="lg"
+          textAlign="center"
+        >
+          <Heading
+            as="h1"
+            size="xl"
+            mb={4}
+            color={textColor}
+            fontWeight="bold"
+          >
+            Bem-vindos à Escolinha de Futevôlei do Lago!
+          </Heading>
+          <Text fontSize="lg" color="gray.600" lineHeight="tall" marginTop={10}>
+            E aí, galera! Preparados para se jogar futevôlei e curtir momentos
+            incríveis na areia? 🌊⚽ A Escolinha de Futevôlei do Lago tá chegando
+            com tudo pra trazer diversão, esporte e amizade pra criançada! 😎
+            <br />
+            <br />
+            Pra fazer parte dessa vibe, é só preencher o formulário ao lado com
+            seus dados. Capricha, hein? Assim, você garante sua vaga pra jogar
+            aquele futevôleicom a gente! 🚀
+          </Text>
+        </Box>
+
+        {/* Formulário */}
+        <Box
+          flex="1"
+          maxW={{ base: "full", md: "600px" }}
+          p={8}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="lg"
+        >
+          <Heading as="h2" size="lg" mb={6} color={textColor}>
+            Cadastro
+          </Heading>
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={5}>
+              <FormControl id="name" isRequired>
+                <FormLabel fontWeight="medium">Nome Completo</FormLabel>
+                <Input
+                  type="text"
+                  value={name}
+                  placeholder="Digite seu nome"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="age" isRequired>
+                <FormLabel fontWeight="medium">Idade</FormLabel>
+                <Input
+                  type="number"
+                  placeholder="Digite sua idade"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="schoolUnit" isRequired>
+                <FormLabel fontWeight="medium">Unidade Escolar</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Nome da escola"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  value={schoolUnit}
+                  onChange={(e) => setSchoolUnit(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="identityFile" isRequired>
+                <FormLabel fontWeight="medium">Documento de Identidade</FormLabel>
+                <Input
+                  type="file"
+                  accept=".pdf,.jpg,.png"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  p={1}
+                  onChange={(e) => setIdentityFile(e.target.files?.[0] || null)}
+                />
+              </FormControl>
+
+              <FormControl id="attendanceFile" isRequired>
+                <FormLabel fontWeight="medium">
+                  Comprovante de Presença Escolar
+                </FormLabel>
+                <Input
+                  type="file"
+                  accept=".pdf,.jpg,.png"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  p={1}
+                  onChange={(e) => setAttendanceFile(e.target.files?.[0] || null)}
+                />
+              </FormControl>
+
+              <Button
+                type="submit"
+                colorScheme="yellow"
+                bg={buttonBg}
+                color="white"
+                width="full"
+                isLoading={isLoading}
+                _hover={{ bg: buttonHoverBg }}
+                fontWeight="bold"
+              >
+                Enviar Cadastro
+              </Button>
+            </VStack>
+          </form>
+        </Box>
+      </Flex>
     </Box>
   );
 }
