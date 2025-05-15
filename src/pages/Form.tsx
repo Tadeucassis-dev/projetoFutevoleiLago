@@ -18,6 +18,8 @@ function Form() {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [schoolUnit, setSchoolUnit] = useState("");
+  const [fone, setFone] = useState("");
+  const [email, setEmail] = useState("");
   const [identityFile, setIdentityFile] = useState<File | null>(null);
   const [attendanceFile, setAttendanceFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +49,8 @@ function Form() {
     formData.append("name", name);
     formData.append("age", age);
     formData.append("schoolUnit", schoolUnit);
+    formData.append("fone", fone);
+    formData.append("email", email);
     if (identityFile) formData.append("identityFile", identityFile);
     if (attendanceFile) formData.append("attendanceFile", attendanceFile);
 
@@ -187,6 +191,32 @@ function Form() {
                   focusBorderColor="yellow.500"
                   value={schoolUnit}
                   onChange={(e) => setSchoolUnit(e.target.value)}
+                />
+                
+              </FormControl>
+              <FormControl id="fone" isRequired>
+                <FormLabel fontWeight="medium">Telefone</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="telefone"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  value={fone}
+                  onChange={(e) => setFone(e.target.value)}
+                />
+              </FormControl>
+              
+              <FormControl id="email" isRequired>
+                <FormLabel fontWeight="medium">Email</FormLabel>
+                <Input
+                  type="email"
+                  placeholder="Digite seu email"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
 
