@@ -1,4 +1,14 @@
 import axios from 'axios';
+import { 
+  LoginRequest, 
+  LoginResponse, 
+  RegisterRequest, 
+  RegisterResponse, 
+  Student, 
+  StudentCreateRequest,
+  ProcessStudentRequest,
+  RejectStudentRequest
+} from '../types';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
@@ -10,50 +20,66 @@ const api = axios.create({
 // Interceptor para adicionar token de autenticação
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
-  if (token && !config.url?.includes('/user/register') && 
-      !config.url?.includes('/user/register-student') && 
-      !config.url?.includes('/auth/')) {
+  if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-export const login = async (email: string, password: string) => {
-  const response = await api.post('/auth/login', { email, password });
-  return response.data; // Espera { token, user }
-};
-
-export const register = async (name: string, email: string, password: string) => {
-  const formData = new FormData();
-  formData.append('name', name);
-  formData.append('email', email);
-  formData.append('password', password);
-
-  const response = await api.post('/user/register', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-  return response.data; // Espera { token, user }
-};
-
-export const getHome = async () => {
-  const response = await api.get('/user/home');
+// Autenticação
+export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
+  const response = await api.post('/login', credentials);
   return response.data;
 };
 
-export const registerStudent = async (formData: FormData) => {
-  const response = await api.post('/user/register-student', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+export const register = async (userData: RegisterRequest): Promise<RegisterResponse> => {
+  const response = await api.post('/register', userData);
   return response.data;
 };
 
-export const getStudents = async () => {
-  const response = await api.get('/admin/students');
+// Gestão de Alunos
+export const createStudent = async (studentData: StudentCreateRequest): Promise<Student> => {
+  const response = await api.post('/alunos/cadastrar', studentData);
   return response.data;
 };
 
-export const approveStudent = async (id: number) => {
-  const response = await api.post(`/admin/approve-student/${id}`);
+export const getAllStudents = async (): Promise<Student[]> => {
+  const response = await api.get('/alunos');
+  return response.data;
+};
+
+export const getPendingStudents = async (): Promise<Student[]> => {
+  const response = await api.get('/alunos/solicitacoes/pendentes');
+  return response.data;
+};
+
+export const getActiveStudents = async (): Promise<Student[]> => {
+  const response = await api.get('/alunos/ativos');
+  return response.data;
+};
+
+export const getStudentById = async (id: number): Promise<Student> => {
+  const response = await api.get(`/alunos/${id}`);
+  return response.data;
+};
+
+export const getStudentByEmail = async (email: string): Promise<Student> => {
+  const response = await api.get(`/alunos/email/${email}`);
+  return response.data;
+};
+
+export const approveStudent = async (id: number): Promise<Student> => {
+  const response = await api.put(`/alunos/${id}/aprovar`);
+  return response.data;
+};
+
+export const rejectStudent = async (id: number, reason: RejectStudentRequest): Promise<Student> => {
+  const response = await api.put(`/alunos/${id}/rejeitar`, reason);
+  return response.data;
+};
+
+export const processStudent = async (id: number, processData: ProcessStudentRequest): Promise<Student> => {
+  const response = await api.put(`/alunos/${id}/processar`, processData);
   return response.data;
 };
 

@@ -11,17 +11,17 @@ import {
   Flex,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { getHome, registerStudent } from "../services/api";
+import { useState } from "react";
+import { createStudent } from "../services/api";
+import { StudentCreateRequest } from "../types";
 
 function Form() {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [schoolUnit, setSchoolUnit] = useState("");
-  const [fone, setFone] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [identityFile, setIdentityFile] = useState<File | null>(null);
-  const [attendanceFile, setAttendanceFile] = useState<File | null>(null);
+  const [telefone, setTelefone] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [idade, setIdade] = useState("");
+  const [instituicaoEnsino, setInstituicaoEnsino] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
@@ -34,59 +34,43 @@ function Form() {
   const buttonBg = useColorModeValue("yellow.700", "yellow.600");
   const buttonHoverBg = useColorModeValue("yellow.500", "yellow.400");
 
-  useEffect(() => {
-    const fetchHome = async () => {
-      // Função mantida vazia conforme o original
-    };
-    fetchHome();
-  }, [toast]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("age", age);
-    formData.append("schoolUnit", schoolUnit);
-    formData.append("fone", fone);
-    formData.append("email", email);
-    if (identityFile) formData.append("identityFile", identityFile);
-    if (attendanceFile) formData.append("attendanceFile", attendanceFile);
-
-    console.log("FormData:", {
-      name,
-      age,
-      schoolUnit,
-      identityFile: identityFile?.name,
-      attendanceFile: attendanceFile?.name,
-    });
-
     try {
-      await registerStudent(formData);
+      const studentData: StudentCreateRequest = {
+        nome,
+        email,
+        telefone,
+        dataNascimento,
+        idade: parseInt(idade),
+        instituicaoEnsino,
+      };
+
+      await createStudent(studentData);
+
       toast({
-        title: "Cadastro enviado",
-        description: "Seu cadastro foi enviado para aprovação!",
+        title: "Cadastro realizado com sucesso!",
+        description: "Sua solicitação foi enviada e está aguardando aprovação.",
         status: "success",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
-      setName("");
-      setAge("");
-      setSchoolUnit("");
-      setIdentityFile(null);
-      setAttendanceFile(null);
+
+      // Limpar formulário
+      setNome("");
+      setEmail("");
+      setTelefone("");
+      setDataNascimento("");
+      setIdade("");
+      setInstituicaoEnsino("");
     } catch (error: any) {
-      console.error(
-        "Erro na requisição:",
-        error.response?.data || error.message
-      );
       toast({
-        title: "Erro",
-        description:
-          error.response?.data?.message || "Não foi possível enviar o cadastro.",
+        title: "Erro no cadastro",
+        description: error.response?.data?.error || "Ocorreu um erro ao processar seu cadastro.",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     } finally {
@@ -137,7 +121,7 @@ function Form() {
             <br />
             Pra fazer parte dessa vibe, é só preencher o formulário ao lado com
             seus dados. Capricha, hein? Assim, você garante sua vaga pra jogar
-            aquele futevôleicom a gente! 🚀
+            aquele futevôlei com a gente! 🚀
           </Text>
         </Box>
 
@@ -151,98 +135,84 @@ function Form() {
           boxShadow="lg"
         >
           <Heading as="h2" size="lg" mb={6} color={textColor}>
-            Cadastro
+            Cadastro de Aluno
           </Heading>
           <form onSubmit={handleSubmit}>
             <VStack spacing={5}>
-              <FormControl id="name" isRequired>
+              <FormControl id="nome" isRequired>
                 <FormLabel fontWeight="medium">Nome Completo</FormLabel>
                 <Input
                   type="text"
-                  value={name}
-                  placeholder="Digite seu nome"
+                  value={nome}
+                  placeholder="Digite seu nome completo"
                   border="1px solid"
                   borderColor="gray.300"
                   focusBorderColor="yellow.500"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </FormControl>
 
-              <FormControl id="age" isRequired>
-                <FormLabel fontWeight="medium">Idade</FormLabel>
-                <Input
-                  type="number"
-                  placeholder="Digite sua idade"
-                  border="1px solid"
-                  borderColor="gray.300"
-                  focusBorderColor="yellow.500"
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                />
-              </FormControl>
-
-              <FormControl id="schoolUnit" isRequired>
-                <FormLabel fontWeight="medium">Unidade Escolar</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Nome da escola"
-                  border="1px solid"
-                  borderColor="gray.300"
-                  focusBorderColor="yellow.500"
-                  value={schoolUnit}
-                  onChange={(e) => setSchoolUnit(e.target.value)}
-                />
-                
-              </FormControl>
-              <FormControl id="fone" isRequired>
-                <FormLabel fontWeight="medium">Telefone</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="telefone"
-                  border="1px solid"
-                  borderColor="gray.300"
-                  focusBorderColor="yellow.500"
-                  value={fone}
-                  onChange={(e) => setFone(e.target.value)}
-                />
-              </FormControl>
-              
               <FormControl id="email" isRequired>
                 <FormLabel fontWeight="medium">Email</FormLabel>
                 <Input
                   type="email"
+                  value={email}
                   placeholder="Digite seu email"
                   border="1px solid"
                   borderColor="gray.300"
                   focusBorderColor="yellow.500"
-                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
 
-              <FormControl id="identityFile" isRequired>
-                <FormLabel fontWeight="medium">Documento de Identidade</FormLabel>
+              <FormControl id="telefone" isRequired>
+                <FormLabel fontWeight="medium">Telefone</FormLabel>
                 <Input
-                  type="file"
-                  accept=".pdf,.jpg,.png"
+                  type="tel"
+                  value={telefone}
+                  placeholder="(11) 99999-9999"
                   border="1px solid"
                   borderColor="gray.300"
-                  p={1}
-                  onChange={(e) => setIdentityFile(e.target.files?.[0] || null)}
+                  focusBorderColor="yellow.500"
+                  onChange={(e) => setTelefone(e.target.value)}
                 />
               </FormControl>
 
-              <FormControl id="attendanceFile" isRequired>
-                <FormLabel fontWeight="medium">
-                  Comprovante de Presença Escolar
-                </FormLabel>
+              <FormControl id="dataNascimento" isRequired>
+                <FormLabel fontWeight="medium">Data de Nascimento</FormLabel>
                 <Input
-                  type="file"
-                  accept=".pdf,.jpg,.png"
+                  type="date"
+                  value={dataNascimento}
                   border="1px solid"
                   borderColor="gray.300"
-                  p={1}
-                  onChange={(e) => setAttendanceFile(e.target.files?.[0] || null)}
+                  focusBorderColor="yellow.500"
+                  onChange={(e) => setDataNascimento(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="idade" isRequired>
+                <FormLabel fontWeight="medium">Idade</FormLabel>
+                <Input
+                  type="number"
+                  value={idade}
+                  placeholder="Digite sua idade"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  onChange={(e) => setIdade(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl id="instituicaoEnsino" isRequired>
+                <FormLabel fontWeight="medium">Instituição de Ensino</FormLabel>
+                <Input
+                  type="text"
+                  value={instituicaoEnsino}
+                  placeholder="Nome da escola"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  focusBorderColor="yellow.500"
+                  onChange={(e) => setInstituicaoEnsino(e.target.value)}
                 />
               </FormControl>
 

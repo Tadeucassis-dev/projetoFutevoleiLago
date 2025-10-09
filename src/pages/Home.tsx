@@ -1,584 +1,715 @@
 import {
   Box,
-  Button,
   Container,
+  Heading,
+  Text,
+  Button,
+  VStack,
+  HStack,
+  Grid,
+  GridItem,
+  Image,
+  Card,
+  CardBody,
+  Icon,
   Flex,
+  SimpleGrid,
   FormControl,
   FormLabel,
-  Grid,
-  Heading,
-  HStack,
-  Icon,
-  Image,
   Input,
-  Link as ChakraLink,
-  SimpleGrid,
-  Stack,
-  Text,
   Textarea,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { FaCheckCircle, FaEnvelope, FaMapMarkerAlt, FaPhone, FaWhatsapp } from "react-icons/fa";
-import React, { useEffect } from "react";
+  useToast,
+  Badge,
+  Avatar,
+  Divider,
+  Stack,
+  Center,
+  useColorModeValue
+} from '@chakra-ui/react';
+import { keyframes } from '@emotion/react';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { 
+  FaVolleyballBall, 
+  FaUsers, 
+  FaTrophy, 
+  FaHeart, 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope, 
+  FaStar, 
+  FaPlay, 
+  FaArrowRight, 
+  FaInstagram, 
+  FaFacebook, 
+  FaWhatsapp 
+} from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import React from 'react';
 
-export function Home() {
-  // Definir cores baseadas no modo claro/escuro
-  const bgGradient = useColorModeValue(
-    "linear(to-b, blue.100, orange.100)",
-    "linear(to-b, blue.900, orange.900)"
-  );
-  const sectionBg = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.800", "white");
-  const accentColor = useColorModeValue("yellow.500", "yellow.400");
-  const buttonBg = useColorModeValue("yellow.500", "yellow.400");
-  const buttonHoverBg = useColorModeValue("yellow.600", "yellow.500");
-  const cardBg = useColorModeValue("white", "gray.700");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
-  const inputBg = useColorModeValue("white", "gray.800");
-  const inputBorderColor = useColorModeValue("gray.300", "gray.600");
+const MotionBox = motion(Box);
+const MotionCard = motion(Card);
+const MotionImage = motion(Image);
 
-  // Efeito de scroll suave para as âncoras
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const scaleOnHover = {
+  whileHover: { scale: 1.05, transition: { duration: 0.3 } },
+  whileTap: { scale: 0.95 }
+};
+
+const float = keyframes`
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+`;
+
+const pulse = keyframes`
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+`;
+
+const AnimatedSection: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
+
   useEffect(() => {
-    const handleAnchorClick = (e: Event) => {
-      const target = e.target as HTMLAnchorElement;
-      if (target.getAttribute('href')?.startsWith('#')) {
-        e.preventDefault();
-        const targetId = target.getAttribute('href');
-        const targetElement = document.querySelector(targetId!);
-        if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth'
-          });
-        }
-      }
-    };
+    if (inView) {
+      controls.start('visible');
+    }
+  }, [controls, inView]);
 
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', handleAnchorClick);
+  return (
+    <MotionBox
+      ref={ref}
+      animate={controls}
+      initial="hidden"
+      variants={staggerContainer}
+    >
+      {children}
+    </MotionBox>
+  );
+};
+
+function Home() {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const bgGradient = useColorModeValue(
+    'linear(to-br, blue.50, orange.50)',
+    'linear(to-br, blue.900, orange.900)'
+  );
+
+  // Funções de navegação
+  const handleCadastroClick = () => {
+    navigate('/cadastro');
+  };
+
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: 'Mensagem enviada!',
+      description: 'Entraremos em contato em breve.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
     });
+    setFormData({ name: '', email: '', phone: '', message: '' });
+  };
 
-    return () => {
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.removeEventListener('click', handleAnchorClick);
-      });
-    };
-  }, []);
+  const benefits = [
+    {
+      icon: FaHeart,
+      title: 'Saúde e Bem-estar',
+      description: 'Atividade física completa que fortalece corpo e mente',
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'
+    },
+    {
+      icon: FaUsers,
+      title: 'Inclusão Social',
+      description: 'Promovemos integração e amizades duradouras',
+      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=300&fit=crop'
+    },
+    {
+      icon: FaTrophy,
+      title: 'Desenvolvimento Pessoal',
+      description: 'Construa confiança e disciplina através do esporte',
+      image: 'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=400&h=300&fit=crop'
+    },
+    {
+      icon: FaVolleyballBall,
+      title: 'Técnica Profissional',
+      description: 'Aprenda com instrutores qualificados e experientes',
+      image: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=300&fit=crop'
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: 'Ana Silva',
+      age: 28,
+      text: 'Transformou minha vida! Encontrei amigos incríveis e melhorei muito minha condição física.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Carlos Oliveira',
+      age: 35,
+      text: 'Projeto social fantástico! Meus filhos adoram e eu também me divirto muito aqui.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Mariana Costa',
+      age: 22,
+      text: 'Ambiente acolhedor e professores dedicados. Recomendo para toda a família!',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Roberto Mendes',
+      age: 29,
+      text: 'Projeto incrível! A qualidade dos treinadores e a estrutura são excepcionais.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Juliana Rocha',
+      age: 26,
+      text: 'Aqui encontrei muito mais que um esporte, encontrei uma família que me apoia sempre.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Pedro Almeida',
+      age: 38,
+      text: 'Minha condição física melhorou drasticamente e minha autoestima também. Recomendo!',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Camila Santos',
+      age: 24,
+      text: 'O ambiente é super acolhedor e os professores são muito atenciosos com todos os alunos.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Lucas Ferreira',
+      age: 33,
+      text: 'Participar deste projeto foi uma das melhores decisões da minha vida. Transformação total!',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Fernanda Lima',
+      age: 31,
+      text: 'Excelente iniciativa! Meus filhos desenvolveram muito a coordenação e fizeram grandes amizades.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face'
+    },
+    {
+      name: 'Diego Souza',
+      age: 27,
+      text: 'Lugar perfeito para quem quer se exercitar, se divertir e conhecer pessoas especiais.',
+      rating: 5,
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
+    }
+  ];
+
+  const galleryImages = [
+    'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=500&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=500&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=500&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=500&h=400&fit=crop'
+  ];
 
   return (
     <Box>
-      {/* Seção Hero */}
+      {/* Header com navegação */}
       <Box
-        id="home"
-        height="100vh"
-        bgGradient={bgGradient}
-        display="flex"
-        alignItems="center"
-        position="relative"
-        overflow="hidden"
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={1000}
+        bg="rgba(255, 255, 255, 0.95)"
+        backdropFilter="blur(10px)"
+        borderBottom="1px solid"
+        borderColor="gray.200"
+        px={8}
+        py={4}
       >
-        <Container maxW="container.xl">
-          <Flex
-            direction={{ base: "column", md: "row" }}
-            align="center"
-            justify="space-between"
-            pt={{ base: "20", md: "0" }}
+        <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
+          <Heading size="md" color="yellow.600">
+            Futevôlei do Lago
+          </Heading>
+          <HStack spacing={4}>
+            <Button
+              variant="ghost"
+              colorScheme="yellow"
+              onClick={handleCadastroClick}
+            >
+              Fazer Cadastro
+            </Button>
+            <Button
+              variant="outline"
+              colorScheme="yellow"
+              size="sm"
+              onClick={handleAdminClick}
+            >
+              Admin
+            </Button>
+          </HStack>
+        </Flex>
+      </Box>
+
+      {/* Adicionar padding-top para compensar o header fixo */}
+      <Box pt="80px">
+        {/* Hero Section */}
+        <AnimatedSection>
+          <Box
+            minH="100vh"
+            bgGradient={bgGradient}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            px={{ base: 4, md: 8 }}
+            py={20}
           >
-            <VStack
-              spacing={6}
-              textAlign={{ base: "center", md: "left" }}
-              align={{ base: "center", md: "flex-start" }}
-              maxW={{ base: "100%", md: "50%" }}
-              mb={{ base: 12, md: 0 }}
-            >
-              <Heading
-                as="h1"
-                size={{ base: "2xl", md: "3xl", lg: "4xl" }}
-                color={textColor}
-                fontWeight="bold"
-                lineHeight="1.2"
-              >
-                Projeto Social Futevôlei do Lago
-              </Heading>
-
-              <Text
-                fontSize={{ base: "lg", md: "xl" }}
-                color={textColor}
-                lineHeight="1.8"
-              >
-                Promovendo inclusão, saúde e diversão através do esporte! Junte-se a nós para transformar vidas e fortalecer a comunidade ao redor do lago com a energia do futevôlei.
-              </Text>
-
-              <HStack spacing={4} pt={4}>
-                <Button
-                  as={Link}
-                  to="/form"
-                  bg={buttonBg}
-                  color="white"
-                  size="lg"
-                  fontWeight="bold"
-                  _hover={{ bg: buttonHoverBg }}
-                  px={8}
-                  py={6}
-                  rounded="md"
-                >
-                  Inscreva-se Agora
-                </Button>
-                <Button
-                  as={ChakraLink}
-                  href="#sobre"
-                  variant="outline"
-                  size="lg"
-                  fontWeight="bold"
-                  borderColor={accentColor}
-                  color={textColor}
-                  _hover={{ bg: "rgba(255,255,255,0.1)" }}
-                  px={8}
-                  py={6}
-                  rounded="md"
-                >
-                  Saiba Mais
-                </Button>
-              </HStack>
-            </VStack>
-
-            <Box
-              maxW={{ base: "300px", md: "450px" }}
-              w="full"
-              overflow="hidden"
-              borderRadius="xl"
-              boxShadow="2xl"
-            >
-              <Image
-                src="/logoftv1.png"
-                alt="Futevôlei do Lago"
-                w="full"
-                h="full"
-                objectFit="cover"
-              />
-            </Box>
-          </Flex>
-        </Container>
-      </Box>
-
-      {/* Seção Sobre */}
-      <Box id="sobre" py={20} bg={sectionBg}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <VStack spacing={4} textAlign="center" maxW="800px" mx="auto">
-              <Heading
-                as="h2"
-                size="2xl"
-                color={textColor}
-                fontWeight="bold"
-              >
-                Sobre o Projeto
-              </Heading>
-              <Text fontSize="lg" color={textColor} opacity={0.8}>
-                Conheça mais sobre nossa iniciativa e como estamos transformando vidas através do esporte
-              </Text>
-            </VStack>
-
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} w="full">
-              <Box>
-                <Image
-                  src="/logoftv1.png"
-                  alt="Futevôlei na prática"
-                  borderRadius="lg"
-                  boxShadow="lg"
-                  w="full"
-                  h="auto"
-                />
-              </Box>
-              <VStack align="flex-start" spacing={6} justifyContent="center">
-                <Heading as="h3" size="lg" color={textColor}>
-                  Nossa Missão
-                </Heading>
-                <Text fontSize="md" color={textColor}>
-                  O Projeto Social Futevôlei do Lago nasceu da paixão pelo esporte e do desejo de criar oportunidades para crianças e jovens da nossa comunidade. Nosso objetivo é utilizar o futevôlei como ferramenta de transformação social, promovendo valores como disciplina, trabalho em equipe, respeito e superação.
-                </Text>
-                <Text fontSize="md" color={textColor}>
-                  Através de aulas regulares, eventos e competições, buscamos não apenas formar atletas, mas cidadãos conscientes e preparados para os desafios da vida. Acreditamos que o esporte tem o poder de mudar trajetórias e construir um futuro melhor para todos.
-                </Text>
-                <VStack spacing={4} align="flex-start" pt={2}>
-                  <HStack spacing={4}>
-                    <Icon as={FaCheckCircle} color={accentColor} boxSize={5} />
-                    <Text fontWeight="bold">Aulas gratuitas para a comunidade</Text>
-                  </HStack>
-                  <HStack spacing={4}>
-                    <Icon as={FaCheckCircle} color={accentColor} boxSize={5} />
-                    <Text fontWeight="bold">Professores qualificados</Text>
-                  </HStack>
-                  <HStack spacing={4}>
-                    <Icon as={FaCheckCircle} color={accentColor} boxSize={5} />
-                    <Text fontWeight="bold">Equipamentos de qualidade</Text>
-                  </HStack>
-                </VStack>
-              </VStack>
-            </SimpleGrid>
-          </VStack>
-        </Container>
-      </Box>
-
-      {/* Seção Benefícios */}
-      <Box py={20} bgGradient={bgGradient}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <VStack spacing={4} textAlign="center" maxW="800px" mx="auto">
-              <Heading
-                as="h2"
-                size="2xl"
-                color={textColor}
-                fontWeight="bold"
-              >
-                Benefícios do Futevôlei
-              </Heading>
-              <Text fontSize="lg" color={textColor} opacity={0.8}>
-                Descubra como o futevôlei pode transformar sua vida e saúde
-              </Text>
-            </VStack>
-
-            <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={10}>
-              {[
-                {
-                  title: "Saúde Física",
-                  description: "Melhora o condicionamento cardiovascular, fortalece músculos e aumenta a resistência física."
-                },
-                {
-                  title: "Coordenação Motora",
-                  description: "Desenvolve reflexos, equilíbrio e coordenação motora através de movimentos dinâmicos."
-                },
-                {
-                  title: "Socialização",
-                  description: "Promove a interação social, criando novas amizades e fortalecendo o senso de comunidade."
-                },
-                {
-                  title: "Saúde Mental",
-                  description: "Reduz o estresse e a ansiedade, melhorando o bem-estar mental e emocional."
-                },
-                {
-                  title: "Disciplina",
-                  description: "Ensina valores como comprometimento, pontualidade e respeito às regras."
-                },
-                {
-                  title: "Diversão",
-                  description: "Proporciona momentos de alegria e descontração em um ambiente saudável e estimulante."
-                }
-              ].map((benefit, index) => (
-                <Box
-                  key={index}
-                  bg={cardBg}
-                  p={6}
-                  borderRadius="lg"
-                  boxShadow="md"
-                  border="1px"
-                  borderColor={borderColor}
-                  transition="transform 0.3s ease"
-                  _hover={{ transform: "translateY(-5px)", boxShadow: "xl" }}
-                >
-                  <VStack spacing={4} align="flex-start">
-                    <Heading as="h3" size="md" color={textColor}>
-                      {benefit.title}
+            <Container maxW="1200px">
+              <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12} alignItems="center">
+                <VStack spacing={8} align="start">
+                  <MotionBox variants={fadeInUp}>
+                    <Heading
+                      as="h1"
+                      size="2xl"
+                      fontWeight="bold"
+                      color="gray.800"
+                      lineHeight="shorter"
+                    >
+                      Transforme sua vida através do{' '}
+                      <Text as="span" color="yellow.600">
+                        Futevôlei
+                      </Text>
                     </Heading>
-                    <Text color={textColor}>{benefit.description}</Text>
-                  </VStack>
-                </Box>
-              ))}
-            </SimpleGrid>
-          </VStack>
-        </Container>
-      </Box>
+                  </MotionBox>
 
-      {/* Seção Galeria */}
-      <Box py={20} bg={sectionBg}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <VStack spacing={4} textAlign="center" maxW="800px" mx="auto">
-              <Heading
-                as="h2"
-                size="2xl"
-                color={textColor}
-                fontWeight="bold"
-              >
-                Galeria
-              </Heading>
-              <Text fontSize="lg" color={textColor} opacity={0.8}>
-                Momentos especiais do nosso projeto
-              </Text>
-            </VStack>
-
-            <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <Box
-                  key={item}
-                  borderRadius="lg"
-                  overflow="hidden"
-                  boxShadow="md"
-                  transition="transform 0.3s ease"
-                  _hover={{ transform: "scale(1.03)", zIndex: 1 }}
-                >
-                  <Image
-                    src="/logoftv1.png"
-                    alt={`Galeria ${item}`}
-                    w="full"
-                    h="250px"
-                    objectFit="cover"
-                  />
-                </Box>
-              ))}
-            </SimpleGrid>
-          </VStack>
-        </Container>
-      </Box>
-
-      {/* Seção Depoimentos */}
-      <Box py={20} bgGradient={bgGradient}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <VStack spacing={4} textAlign="center" maxW="800px" mx="auto">
-              <Heading
-                as="h2"
-                size="2xl"
-                color={textColor}
-                fontWeight="bold"
-              >
-                Depoimentos
-              </Heading>
-              <Text fontSize="lg" color={textColor} opacity={0.8}>
-                O que dizem sobre nosso projeto
-              </Text>
-            </VStack>
-
-            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
-              {[
-                {
-                  name: "Maria Silva",
-                  role: "Mãe de aluno",
-                  text: "O projeto transformou a vida do meu filho. Ele está mais disciplinado, fez novos amigos e melhorou até na escola!"
-                },
-                {
-                  name: "João Pedro",
-                  role: "Aluno, 14 anos",
-                  text: "Eu amo as aulas de futevôlei! Os professores são muito legais e aprendi muitas coisas novas. É o melhor dia da semana!"
-                },
-                {
-                  name: "Carlos Mendes",
-                  role: "Voluntário",
-                  text: "Participar deste projeto como voluntário tem sido uma experiência incrível. Ver o desenvolvimento das crianças é muito gratificante."
-                }
-              ].map((testimonial, index) => (
-                <Box
-                  key={index}
-                  bg={cardBg}
-                  p={6}
-                  borderRadius="lg"
-                  boxShadow="md"
-                  border="1px"
-                  borderColor={borderColor}
-                >
-                  <VStack spacing={4} align="flex-start">
-                    <Text fontSize="md" fontStyle="italic" color={textColor}>
-                      "{testimonial.text}"
+                  <MotionBox variants={fadeInUp}>
+                    <Text fontSize="xl" color="gray.600" lineHeight="tall">
+                      Junte-se à nossa comunidade e descubra o poder transformador do esporte. 
+                      Saúde, amizade e diversão em um só lugar!
                     </Text>
-                    <HStack spacing={2}>
-                      <Box
-                        w="40px"
-                        h="40px"
-                        borderRadius="full"
-                        bg={accentColor}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        color="white"
-                        fontWeight="bold"
+                  </MotionBox>
+
+                  <MotionBox variants={fadeInUp}>
+                    <HStack spacing={4}>
+                      <Button
+                        size="lg"
+                        colorScheme="yellow"
+                        rightIcon={<FaArrowRight />}
+                        onClick={handleCadastroClick}
+                        {...scaleOnHover}
                       >
-                        {testimonial.name.charAt(0)}
-                      </Box>
-                      <VStack spacing={0} align="flex-start">
-                        <Text fontWeight="bold" color={textColor}>
-                          {testimonial.name}
-                        </Text>
-                        <Text fontSize="sm" color={textColor} opacity={0.8}>
-                          {testimonial.role}
-                        </Text>
-                      </VStack>
+                        Inscreva-se Agora
+                      </Button>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        colorScheme="yellow"
+                        leftIcon={<FaPlay />}
+                      >
+                        Saiba Mais
+                      </Button>
+                    </HStack>
+                  </MotionBox>
+                </VStack>
+
+                <MotionBox variants={fadeInUp}>
+                  <Image
+                    src="https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=500&fit=crop"
+                    alt="Futevôlei na praia"
+                    borderRadius="2xl"
+                    boxShadow="2xl"
+                    animation={`${float} 6s ease-in-out infinite`}
+                  />
+                </MotionBox>
+              </Grid>
+            </Container>
+          </Box>
+        </AnimatedSection>
+
+        {/* Benefits Section */}
+        <AnimatedSection>
+          <Box py={20} px={{ base: 4, md: 8 }} bg="white">
+            <Container maxW="1200px">
+              <VStack spacing={16}>
+                <VStack spacing={4} textAlign="center">
+                  <Heading size="xl" color="gray.800">
+                    Por que escolher nossa escolinha?
+                  </Heading>
+                  <Text fontSize="lg" color="gray.600" maxW="600px">
+                    Oferecemos muito mais que aulas de futevôlei. Criamos uma experiência completa 
+                    de desenvolvimento pessoal e social.
+                  </Text>
+                </VStack>
+
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
+                  {benefits.map((benefit, index) => (
+                    <MotionCard
+                      key={index}
+                      variants={fadeInUp}
+                      {...scaleOnHover}
+                      overflow="hidden"
+                      boxShadow="lg"
+                      borderRadius="xl"
+                    >
+                      <Image
+                        src={benefit.image}
+                        alt={benefit.title}
+                        h="200px"
+                        w="full"
+                        objectFit="cover"
+                      />
+                      <CardBody>
+                        <VStack spacing={3} align="start">
+                          <Icon as={benefit.icon} boxSize={8} color="yellow.500" />
+                          <Heading size="md" color="gray.800">
+                            {benefit.title}
+                          </Heading>
+                          <Text color="gray.600">
+                            {benefit.description}
+                          </Text>
+                        </VStack>
+                      </CardBody>
+                    </MotionCard>
+                  ))}
+                </SimpleGrid>
+              </VStack>
+            </Container>
+          </Box>
+        </AnimatedSection>
+
+        {/* Testimonials Section */}
+        <AnimatedSection>
+          <Box py={20} px={{ base: 4, md: 8 }} bgGradient={bgGradient}>
+            <Container maxW="1200px">
+              <VStack spacing={16}>
+                <VStack spacing={4} textAlign="center">
+                  <Heading size="xl" color="gray.800">
+                    Depoimentos
+                  </Heading>
+                  <Text fontSize="lg" color="gray.600" maxW="600px">
+                    Veja o que nossos alunos têm a dizer sobre sua experiência conosco
+                  </Text>
+                </VStack>
+
+                <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={8}>
+                  {/* Coluna 1 - Primeiros 5 depoimentos */}
+                  <VStack spacing={6}>
+                    {testimonials.slice(0, 5).map((testimonial, index) => (
+                      <MotionCard
+                        key={index}
+                        variants={fadeInUp}
+                        {...scaleOnHover}
+                        w="full"
+                        boxShadow="lg"
+                        borderRadius="xl"
+                        bg="white"
+                      >
+                        <CardBody>
+                          <VStack spacing={4} align="start">
+                            <HStack spacing={1}>
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Icon key={i} as={FaStar} color="yellow.400" />
+                              ))}
+                            </HStack>
+                            <Text color="gray.700" fontStyle="italic">
+                              "{testimonial.text}"
+                            </Text>
+                            <HStack spacing={3}>
+                              <Avatar src={testimonial.avatar} size="sm" />
+                              <VStack spacing={0} align="start">
+                                <Text fontWeight="bold" color="gray.800">
+                                  {testimonial.name}
+                                </Text>
+                                <Text fontSize="sm" color="gray.600">
+                                  {testimonial.age} anos
+                                </Text>
+                              </VStack>
+                            </HStack>
+                          </VStack>
+                        </CardBody>
+                      </MotionCard>
+                    ))}
+                  </VStack>
+
+                  {/* Coluna 2 - Últimos 5 depoimentos */}
+                  <VStack spacing={6}>
+                    {testimonials.slice(5, 10).map((testimonial, index) => (
+                      <MotionCard
+                        key={index + 5}
+                        variants={fadeInUp}
+                        {...scaleOnHover}
+                        w="full"
+                        boxShadow="lg"
+                        borderRadius="xl"
+                        bg="white"
+                      >
+                        <CardBody>
+                          <VStack spacing={4} align="start">
+                            <HStack spacing={1}>
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Icon key={i} as={FaStar} color="yellow.400" />
+                              ))}
+                            </HStack>
+                            <Text color="gray.700" fontStyle="italic">
+                              "{testimonial.text}"
+                            </Text>
+                            <HStack spacing={3}>
+                              <Avatar src={testimonial.avatar} size="sm" />
+                              <VStack spacing={0} align="start">
+                                <Text fontWeight="bold" color="gray.800">
+                                  {testimonial.name}
+                                </Text>
+                                <Text fontSize="sm" color="gray.600">
+                                  {testimonial.age} anos
+                                </Text>
+                              </VStack>
+                            </HStack>
+                          </VStack>
+                        </CardBody>
+                      </MotionCard>
+                    ))}
+                  </VStack>
+                </Grid>
+              </VStack>
+            </Container>
+          </Box>
+        </AnimatedSection>
+
+        {/* Gallery Section */}
+        <AnimatedSection>
+          <Box py={20} px={{ base: 4, md: 8 }} bg="white">
+            <Container maxW="1200px">
+              <VStack spacing={16}>
+                <VStack spacing={4} textAlign="center">
+                  <Heading size="xl" color="gray.800">
+                    Nossa Galeria
+                  </Heading>
+                  <Text fontSize="lg" color="gray.600" maxW="600px">
+                    Momentos especiais capturados durante nossas atividades
+                  </Text>
+                </VStack>
+
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                  {galleryImages.map((image, index) => (
+                    <MotionImage
+                      key={index}
+                      src={image}
+                      alt={`Galeria ${index + 1}`}
+                      borderRadius="xl"
+                      boxShadow="lg"
+                      variants={fadeInUp}
+                      {...scaleOnHover}
+                      cursor="pointer"
+                    />
+                  ))}
+                </SimpleGrid>
+              </VStack>
+            </Container>
+          </Box>
+        </AnimatedSection>
+
+        {/* Contact Section */}
+        <AnimatedSection>
+          <Box py={20} px={{ base: 4, md: 8 }} bgGradient={bgGradient}>
+            <Container maxW="1200px">
+              <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12}>
+                <VStack spacing={8} align="start">
+                  <VStack spacing={4} align="start">
+                    <Heading size="xl" color="gray.800">
+                      Entre em Contato
+                    </Heading>
+                    <Text fontSize="lg" color="gray.600">
+                      Estamos aqui para responder suas dúvidas e ajudar você a começar sua jornada no futevôlei.
+                    </Text>
+                  </VStack>
+
+                  <VStack spacing={4} align="start">
+                    <HStack spacing={3}>
+                      <Icon as={FaMapMarkerAlt} color="yellow.500" boxSize={5} />
+                      <Text color="gray.700">
+                        Praia do Lago, Brasília - DF
+                      </Text>
+                    </HStack>
+                    <HStack spacing={3}>
+                      <Icon as={FaPhone} color="yellow.500" boxSize={5} />
+                      <Text color="gray.700">
+                        (61) 99999-9999
+                      </Text>
+                    </HStack>
+                    <HStack spacing={3}>
+                      <Icon as={FaEnvelope} color="yellow.500" boxSize={5} />
+                      <Text color="gray.700">
+                        contato@futevoleidolago.com.br
+                      </Text>
                     </HStack>
                   </VStack>
-                </Box>
-              ))}
-            </SimpleGrid>
-          </VStack>
-        </Container>
-      </Box>
 
-      {/* Seção Contato */}
-      <Box id="contato" py={20} bg={sectionBg}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <VStack spacing={4} textAlign="center" maxW="800px" mx="auto">
-              <Heading
-                as="h2"
-                size="2xl"
-                color={textColor}
-                fontWeight="bold"
-              >
-                Entre em Contato
-              </Heading>
-              <Text fontSize="lg" color={textColor} opacity={0.8}>
-                Estamos à disposição para esclarecer suas dúvidas
-              </Text>
-            </VStack>
-
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-              <VStack spacing={6} align="flex-start">
-                <Heading as="h3" size="lg" color={textColor}>
-                  Informações de Contato
-                </Heading>
-                <Text color={textColor}>
-                  Entre em contato conosco para mais informações sobre o projeto, inscrições ou parcerias. Estamos sempre à disposição para atender você!
-                </Text>
-
-                <HStack spacing={4}>
-                  <Icon as={FaPhone} color={accentColor} boxSize={5} />
-                  <Text color={textColor}>(61) 98765-4321</Text>
-                </HStack>
-                <HStack spacing={4}>
-                  <Icon as={FaWhatsapp} color={accentColor} boxSize={5} />
-                  <Text color={textColor}>(61) 98765-4321</Text>
-                </HStack>
-                <HStack spacing={4}>
-                  <Icon as={FaEnvelope} color={accentColor} boxSize={5} />
-                  <Text color={textColor}>contato@futevoleidolago.com.br</Text>
-                </HStack>
-                <HStack spacing={4}>
-                  <Icon as={FaMapMarkerAlt} color={accentColor} boxSize={5} />
-                  <Text color={textColor}>Lago Norte, Brasília - DF</Text>
-                </HStack>
-              </VStack>
-
-              <Box
-                bg={cardBg}
-                p={8}
-                borderRadius="lg"
-                boxShadow="md"
-                border="1px"
-                borderColor={borderColor}
-              >
-                <VStack as="form" spacing={6}>
-                  <FormField label="Nome" placeholder="Seu nome completo" />
-                  <FormField label="Email" placeholder="seu@email.com" type="email" />
-                  <FormField label="Telefone" placeholder="(00) 00000-0000" />
-                  <FormField
-                    label="Mensagem"
-                    placeholder="Escreva sua mensagem aqui..."
-                    textarea
-                  />
-                  <Button
-                    type="submit"
-                    bg={buttonBg}
-                    color="white"
-                    size="lg"
-                    fontWeight="bold"
-                    _hover={{ bg: buttonHoverBg }}
-                    w="full"
-                  >
-                    Enviar Mensagem
-                  </Button>
+                  <HStack spacing={4}>
+                    <Button
+                      leftIcon={<FaInstagram />}
+                      colorScheme="pink"
+                      variant="outline"
+                      size="sm"
+                    >
+                      Instagram
+                    </Button>
+                    <Button
+                      leftIcon={<FaFacebook />}
+                      colorScheme="facebook"
+                      variant="outline"
+                      size="sm"
+                    >
+                      Facebook
+                    </Button>
+                    <Button
+                      leftIcon={<FaWhatsapp />}
+                      colorScheme="whatsapp"
+                      variant="outline"
+                      size="sm"
+                    >
+                      WhatsApp
+                    </Button>
+                  </HStack>
                 </VStack>
-              </Box>
-            </SimpleGrid>
-          </VStack>
-        </Container>
-      </Box>
 
-      {/* Seção CTA Final */}
-      <Box py={16} bgGradient={bgGradient} textAlign="center">
-        <Container maxW="container.md">
-          <VStack spacing={8}>
-            <Heading
-              as="h2"
-              size="xl"
-              color={textColor}
-              fontWeight="bold"
-            >
-              Faça Parte Dessa História!
-            </Heading>
-            <Text fontSize="lg" color={textColor} maxW="600px" mx="auto">
-              Inscreva-se agora mesmo e venha transformar sua vida através do futevôlei. Vagas limitadas!
-            </Text>
-            <Button
-              as={Link}
-              to="/form"
-              bg={buttonBg}
-              color="white"
-              size="lg"
-              fontWeight="bold"
-              _hover={{ bg: buttonHoverBg }}
-              px={10}
-              py={7}
-              rounded="md"
-            >
-              Inscreva-se Agora
-            </Button>
-          </VStack>
-        </Container>
+                <Box bg="white" p={8} borderRadius="xl" boxShadow="lg">
+                  <form onSubmit={handleSubmit}>
+                    <VStack spacing={6}>
+                      <Heading size="lg" color="gray.800" textAlign="center">
+                        Envie uma Mensagem
+                      </Heading>
+                      
+                      <FormControl isRequired>
+                        <FormLabel>Nome</FormLabel>
+                        <Input
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          placeholder="Seu nome completo"
+                        />
+                      </FormControl>
+
+                      <FormControl isRequired>
+                        <FormLabel>Email</FormLabel>
+                        <Input
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          placeholder="seu@email.com"
+                        />
+                      </FormControl>
+
+                      <FormControl isRequired>
+                        <FormLabel>Telefone</FormLabel>
+                        <Input
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          placeholder="(61) 99999-9999"
+                        />
+                      </FormControl>
+
+                      <FormControl isRequired>
+                        <FormLabel>Mensagem</FormLabel>
+                        <Textarea
+                          name="message"
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          placeholder="Sua mensagem..."
+                          rows={4}
+                        />
+                      </FormControl>
+
+                      <Button
+                        type="submit"
+                        colorScheme="yellow"
+                        size="lg"
+                        w="full"
+                        rightIcon={<FaArrowRight />}
+                      >
+                        Enviar Mensagem
+                      </Button>
+                    </VStack>
+                  </form>
+                </Box>
+              </Grid>
+            </Container>
+          </Box>
+        </AnimatedSection>
+
+        {/* CTA Final */}
+        <AnimatedSection>
+          <Box py={20} px={{ base: 4, md: 8 }} bg="yellow.500">
+            <Container maxW="800px">
+              <VStack spacing={8} textAlign="center">
+                <Heading size="xl" color="white">
+                  Pronto para começar sua jornada?
+                </Heading>
+                <Text fontSize="lg" color="yellow.100" maxW="600px">
+                  Não perca mais tempo! Junte-se à nossa comunidade e transforme sua vida através do futevôlei.
+                </Text>
+                <Button
+                  size="lg"
+                  bg="white"
+                  color="yellow.500"
+                  rightIcon={<FaArrowRight />}
+                  onClick={handleCadastroClick}
+                  _hover={{ bg: "gray.100" }}
+                  animation={`${pulse} 2s infinite`}
+                >
+                  Fazer Cadastro Agora
+                </Button>
+              </VStack>
+            </Container>
+          </Box>
+        </AnimatedSection>
       </Box>
     </Box>
   );
 }
 
-// Componente auxiliar para campos de formulário
-function FormField({ 
-  label, 
-  placeholder, 
-  type = "text", 
-  textarea = false 
-}: {
-  label: string;
-  placeholder: string;
-  type?: string;
-  textarea?: boolean;
-}) {
-  const inputBg = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.300", "gray.600");
-  
-  return (
-    <Box w="full">
-      <Text mb={2} fontWeight="medium">{label}</Text>
-      {textarea ? (
-        <Box
-          as="textarea"
-          placeholder={placeholder}
-          p={3}
-          borderRadius="md"
-          border="1px"
-          borderColor={borderColor}
-          bg={inputBg}
-          rows={4}
-          w="full"
-          _focus={{
-            borderColor: "yellow.500",
-            boxShadow: "0 0 0 1px yellow.500",
-          }}
-        />
-      ) : (
-        <Box
-          as="input"
-          type={type}
-          placeholder={placeholder}
-          p={3}
-          borderRadius="md"
-          border="1px"
-          borderColor={borderColor}
-          bg={inputBg}
-          w="full"
-          _focus={{
-            borderColor: "yellow.500",
-            boxShadow: "0 0 0 1px yellow.500",
-          }}
-        />
-      )}
-    </Box>
-  );
-}
+export default Home;
