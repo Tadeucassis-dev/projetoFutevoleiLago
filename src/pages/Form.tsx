@@ -12,6 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createStudent } from "../services/api";
 import { StudentCreateRequest } from "../types";
 
@@ -24,6 +25,7 @@ function Form() {
   const [instituicaoEnsino, setInstituicaoEnsino] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const navigate = useNavigate();
 
   // Definir cores baseadas no modo claro/escuro
   const bgGradient = useColorModeValue(
@@ -65,6 +67,12 @@ function Form() {
       setDataNascimento("");
       setIdade("");
       setInstituicaoEnsino("");
+
+      // Redirecionar para a página Home após 2 segundos
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+
     } catch (error: any) {
       toast({
         title: "Erro no cadastro",

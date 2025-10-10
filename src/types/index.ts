@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  roles?: { name: string }[];
+  roles?: { name: string }[]; // Opcional, pois o backend pode não enviar
 }
 
 export interface Student {
@@ -27,6 +27,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
+  user: User;
 }
 
 export interface RegisterRequest {

@@ -125,7 +125,7 @@ function Home() {
   };
 
   const handleAdminClick = () => {
-    navigate('/admin');
+    navigate('/login');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

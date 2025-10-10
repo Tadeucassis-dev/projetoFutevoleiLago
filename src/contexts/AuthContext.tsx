@@ -1,10 +1,12 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api';
-import { User } from '../types';
+import { LoginRequest, User } from '../types';
 
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -14,39 +16,92 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const loginFn = async (email: string, password: string) => {
+  // Verificar se há token salvo ao carregar a aplicação
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          // Aqui você pode fazer uma chamada para validar o token
+          // Por enquanto, vamos apenas verificar se existe
+          // Em uma implementação real, você faria uma chamada para /me ou similar
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        localStorage.removeItem('token');
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  const loginFn = useCallback(async (email: string, password: string) => {
     try {
-      const response = await login(email, password);
+      setIsLoading(true);
+      const credentials: LoginRequest = { email, password };
+      const response = await login(credentials);
+      
+      console.log('Resposta do login:', response); // Para debug
+      
       localStorage.setItem('token', response.token);
       setUser(response.user);
-      const isAdmin = response.user.roles.some((role: { name: string }) => role.name === 'ROLE_ADMIN');
-      navigate('/form');
-    } catch (error) {
-      throw new Error('Falha no login');
+      
+      // Por enquanto, vamos assumir que todos os usuários logados são admins
+      // até que o backend seja ajustado para retornar roles
+      navigate('/admin');
+      
+    } catch (error: any) {
+      console.error('Erro no login:', error); // Para debug
+      throw new Error(error.response?.data?.message || error.message || 'Falha no login');
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [navigate]);
 
-  const registerFn = async (name: string, email: string, password: string) => {
+  const registerFn = useCallback(async (name: string, email: string, password: string) => {
     try {
-      const response = await register(name, email, password);
-      localStorage.setItem('token', response.token);
-      setUser(response.user);
-      navigate('/login'); // Redireciona para login após registro
-    } catch (error) {
-      throw error; // Propaga o erro para o componente lidar
+      setIsLoading(true);
+      const response = await register({ name, email, password });
+      
+      // Após registro bem-sucedido, redirecionar para login
+      navigate('/login', { 
+        state: { 
+          message: 'Cadastro realizado com sucesso! Faça login para continuar.' 
+        } 
+      });
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Falha no registro');
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [navigate]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('token');
     setUser(null);
-    navigate('/login');
+    navigate('/');
+  }, [navigate]);
+
+  const isAuthenticated = !!user;
+
+  const value = {
+    user,
+    isLoading,
+    isAuthenticated,
+    login: loginFn,
+    register: registerFn,
+    logout
   };
 
   return (
-    <AuthContext.Provider value={{ user, login: loginFn, register: registerFn, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

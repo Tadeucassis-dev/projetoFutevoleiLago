@@ -1,25 +1,35 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { ReactNode } from 'react';
+import { Spinner, Center, Box } from '@chakra-ui/react';
 
 interface ProtectedRouteProps {
-  role: string;
   children: ReactNode;
+  requiredRole?: string;
 }
 
-function ProtectedRoute({ role, children }: ProtectedRouteProps) {
-  const { user } = useAuth();
+function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+  const { user, isLoading } = useAuth();
   const location = useLocation();
 
+  // Mostrar loading enquanto verifica autenticação
+  if (isLoading) {
+    return (
+      <Center minH="100vh">
+        <Box textAlign="center">
+          <Spinner size="xl" color="blue.500" thickness="4px" />
+        </Box>
+      </Center>
+    );
+  }
+
+  // Redirecionar para login se não estiver autenticado
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const hasRole = user.roles.some((r) => r.name === role);
-  if (!hasRole) {
-    return <Navigate to="/" replace />;
-  }
-
+  // Por enquanto, permitir acesso se estiver autenticado
+  // TODO: Implementar verificação de roles quando o backend estiver pronto
   return <>{children}</>;
 }
 
