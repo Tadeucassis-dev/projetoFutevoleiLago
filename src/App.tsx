@@ -12,7 +12,7 @@ import theme from './theme';
 
 function App() {
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <ErrorBoundary>
         <AuthProvider>
           <Routes>
@@ -23,7 +23,7 @@ function App() {
             <Route 
               path="/admin" 
               element={
-                <ProtectedRoute requiredRole="ADMIN">
+                <ProtectedRoute>
                   <AdminDashboard />
                 </ProtectedRoute>
               } 

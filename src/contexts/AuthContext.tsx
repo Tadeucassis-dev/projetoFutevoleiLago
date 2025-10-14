@@ -47,18 +47,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(true);
       const credentials: LoginRequest = { email, password };
       const response = await login(credentials);
-      
-      console.log('Resposta do login:', response); // Para debug
-      
+
       localStorage.setItem('token', response.token);
-      setUser(response.user);
-      
-      // Por enquanto, vamos assumir que todos os usuários logados são admins
-      // até que o backend seja ajustado para retornar roles
+      setUser(response.user ?? null);
+
+      // Redireciona para página de validação de alunos
       navigate('/admin');
-      
     } catch (error: any) {
-      console.error('Erro no login:', error); // Para debug
       throw new Error(error.response?.data?.message || error.message || 'Falha no login');
     } finally {
       setIsLoading(false);

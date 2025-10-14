@@ -8,11 +8,11 @@ interface ProtectedRouteProps {
   requiredRole?: string;
 }
 
-function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
-  const { user, isLoading } = useAuth();
+function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { isLoading } = useAuth();
   const location = useLocation();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-  // Mostrar loading enquanto verifica autenticação
   if (isLoading) {
     return (
       <Center minH="100vh">
@@ -23,13 +23,12 @@ function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
     );
   }
 
-  // Redirecionar para login se não estiver autenticado
-  if (!user) {
+  // Se não há token, envia para login
+  if (!token) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Por enquanto, permitir acesso se estiver autenticado
-  // TODO: Implementar verificação de roles quando o backend estiver pronto
+  // Com token, permite acesso
   return <>{children}</>;
 }
 

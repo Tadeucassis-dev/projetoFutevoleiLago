@@ -29,17 +29,17 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const toast = useToast();
   const location = useLocation();
   const navigate = useNavigate();
 
   // Redirecionar se já estiver autenticado
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user?.roles?.some(r => r.name === 'ADMIN' || r.name === 'ROLE_ADMIN')) {
       navigate('/admin');
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   // Definir cores baseadas no modo claro/escuro
   const bgGradient = useColorModeValue(
@@ -106,7 +106,7 @@ function Login() {
       position="relative"
     >
       {/* Botão Voltar */}
-      <IconButton
+       <IconButton
         aria-label="Voltar para home"
         icon={<FaArrowLeft />}
         position="absolute"
@@ -116,7 +116,6 @@ function Login() {
         variant="ghost"
         size="lg"
       />
-
       <Card maxW="400px" w="full" bg={cardBg} shadow="xl">
         <CardBody p={8}>
           <VStack spacing={6}>

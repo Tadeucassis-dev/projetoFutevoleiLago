@@ -35,15 +35,39 @@ function AdminDashboard() {
   const fetchAllData = async () => {
     setIsLoading(true);
     try {
-      const [allData, pendingData, activeData] = await Promise.all([
-        getAllStudents(),
-        getPendingStudents(),
-        getActiveStudents()
-      ]);
-      
-      setAllStudents(allData);
-      setPendingStudents(pendingData);
-      setActiveStudents(activeData);
+      const dataAll = await getAllStudents();
+
+      const normalizeList = (payload: any): Student[] => {
+        if (Array.isArray(payload)) return payload;
+        return payload?.alunos ?? payload?.students ?? payload?.content ?? [];
+      };
+
+      const mergeUniqueById = (lists: Student[][]): Student[] => {
+        const map = new Map<number, Student>();
+        lists.forEach(list => list.forEach(s => map.set(s.id, s)));
+        return Array.from(map.values());
+      };
+
+      const listAll = normalizeList(dataAll);
+
+      let listPending: Student[] = [];
+      let listActive: Student[] = [];
+
+      try {
+        const dataPending = await getPendingStudents();
+        listPending = normalizeList(dataPending);
+      } catch (_) {}
+
+      try {
+        const dataActive = await getActiveStudents();
+        listActive = normalizeList(dataActive);
+      } catch (_) {}
+
+      const mergedAll = mergeUniqueById([listAll, listPending, listActive]);
+
+      setAllStudents(mergedAll);
+      setPendingStudents(mergedAll.filter(s => s.statusSolicitacao === 'PENDENTE'));
+      setActiveStudents(mergedAll.filter(s => s.statusSolicitacao === 'APROVADO' || s.ativo));
     } catch (error: any) {
       toast({
         title: 'Erro',

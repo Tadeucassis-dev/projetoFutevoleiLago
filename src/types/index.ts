@@ -27,7 +27,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  user: User;
+  user?: User; // opcional, backend pode não enviar
 }
 
 export interface RegisterRequest {

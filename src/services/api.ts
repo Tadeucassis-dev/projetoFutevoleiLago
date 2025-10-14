@@ -69,7 +69,7 @@ export const getStudentByEmail = async (email: string): Promise<Student> => {
 };
 
 export const approveStudent = async (id: number): Promise<Student> => {
-  const response = await api.put(`/alunos/${id}/aprovar`);
+  const response = await api.post(`/alunos/${id}/aprovar`);
   return response.data;
 };
 
