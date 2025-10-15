@@ -21,11 +21,20 @@ import {
   FormControl,
   FormLabel,
   Text,
-  VStack
+  VStack,
+  Box,
+  Flex,
+  Spacer,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Student } from '../types';
-import { approveStudent, rejectStudent, processStudent } from '../services/api';
+import { approveStudent, rejectStudent, deleteStudent } from '../services/api';
 
 interface StudentTableProps {
   students: Student[];
@@ -35,9 +44,12 @@ interface StudentTableProps {
 function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isDeleteAllOpen, onOpen: onDeleteAllOpen, onClose: onDeleteAllClose } = useDisclosure();
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -101,12 +113,16 @@ function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
 
     setIsLoading(true);
     try {
-      await rejectStudent(selectedStudent.id, { motivoRejeicao: rejectReason });
+      const rejectData = {
+        motivoRejeicao: rejectReason,
+      };
+      
+      await rejectStudent(selectedStudent.id, rejectData);
       toast({
         title: 'Aluno rejeitado',
-        description: `${selectedStudent.nome} foi rejeitado.`,
+        description: `${selectedStudent.nome} foi rejeitado. Motivo: ${rejectReason}`,
         status: 'info',
-        duration: 3000,
+        duration: 4000,
         isClosable: true,
       });
       onStudentUpdate();
@@ -114,7 +130,7 @@ function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
     } catch (error: any) {
       toast({
         title: 'Erro ao rejeitar aluno',
-        description: error.response?.data?.error || 'Erro interno do servidor',
+        description: error.response?.data?.error || error.response?.data?.message || 'Erro interno do servidor',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -124,8 +140,150 @@ function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
     }
   };
 
+  const handleDeleteClick = (student: Student) => {
+    // Só permite deletar alunos rejeitados
+    if (student.statusSolicitacao !== 'REJEITADO') {
+      toast({
+        title: "Ação não permitida",
+        description: "Apenas alunos rejeitados podem ser deletados",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    setSelectedStudent(student);
+    onDeleteOpen();
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedStudent) return;
+
+    setIsLoading(true);
+    try {
+      await deleteStudent(selectedStudent.id);
+      onStudentUpdate();
+      onDeleteClose();
+      
+      toast({
+        title: "Sucesso",
+        description: `Aluno ${selectedStudent.nome} foi removido com sucesso`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      console.error('Erro ao deletar aluno:', error);
+      toast({
+        title: "Erro",
+        description: error.response?.data?.error || error.response?.data?.message || "Erro ao remover aluno",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAllConfirm = async () => {
+    setIsLoading(true);
+    try {
+      // Deletar apenas alunos rejeitados
+      const rejectedStudents = students.filter(s => s.statusSolicitacao === 'REJEITADO');
+      
+      if (rejectedStudents.length === 0) {
+        toast({
+          title: "Aviso",
+          description: "Não há alunos rejeitados para remover",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+        });
+        onDeleteAllClose();
+        return;
+      }
+      
+      // Deletar cada aluno rejeitado individualmente
+      let deletedCount = 0;
+      const errors = [];
+      
+      for (const student of rejectedStudents) {
+        try {
+          await deleteStudent(student.id);
+          deletedCount++;
+        } catch (error: any) {
+          console.error(`Erro ao deletar aluno ${student.nome}:`, error);
+          errors.push(`${student.nome}: ${error.response?.data?.error || 'Erro desconhecido'}`);
+        }
+      }
+      
+      onStudentUpdate();
+      onDeleteAllClose();
+      
+      if (deletedCount === rejectedStudents.length) {
+        toast({
+          title: "Sucesso",
+          description: `${deletedCount} aluno(s) rejeitado(s) foram removidos com sucesso`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else if (deletedCount > 0) {
+        toast({
+          title: "Parcialmente concluído",
+          description: `${deletedCount} de ${rejectedStudents.length} aluno(s) foram removidos. Alguns erros ocorreram.`,
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Nenhum aluno pôde ser removido. Verifique os logs para mais detalhes.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error: any) {
+      console.error('Erro ao deletar alunos rejeitados:', error);
+      toast({
+        title: "Erro",
+        description: error.response?.data?.error || error.response?.data?.message || "Erro ao remover alunos rejeitados",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
+      {/* Cabeçalho com ações */}
+      <Box mb={4}>
+        <Flex align="center">
+          <Text fontSize="lg" fontWeight="bold" color="gray.700">
+            Lista de Alunos ({students.length})
+          </Text>
+          <Spacer />
+          {students.filter(s => s.statusSolicitacao === 'REJEITADO').length > 0 && (
+            <Button
+              colorScheme="red"
+              variant="outline"
+              size="sm"
+              onClick={onDeleteAllOpen}
+              isLoading={isLoading}
+            >
+              Deletar Rejeitados ({students.filter(s => s.statusSolicitacao === 'REJEITADO').length})
+            </Button>
+          )}
+        </Flex>
+      </Box>
+
       <Table variant="simple" bg="white" borderRadius="lg" overflow="hidden">
         <Thead bg="gray.50">
           <Tr>
@@ -175,19 +333,31 @@ function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
                     </Button>
                   </HStack>
                 )}
+                
                 {student.statusSolicitacao === 'APROVADO' && (
                   <Text fontSize="sm" color="green.600">
                     Aprovado em {student.dataAprovacao ? formatDate(student.dataAprovacao) : 'N/A'}
                   </Text>
                 )}
+                
                 {student.statusSolicitacao === 'REJEITADO' && (
-                  <VStack align="start" spacing={1}>
-                    <Text fontSize="sm" color="red.600">Rejeitado</Text>
-                    {student.motivoRejeicao && (
-                      <Text fontSize="xs" color="gray.600">
-                        Motivo: {student.motivoRejeicao}
-                      </Text>
-                    )}
+                  <VStack align="start" spacing={2}>
+                    <VStack align="start" spacing={1}>
+                      <Text fontSize="sm" color="red.600">Rejeitado</Text>
+                      {student.motivoRejeicao && (
+                        <Text fontSize="xs" color="gray.600">
+                          Motivo: {student.motivoRejeicao}
+                        </Text>
+                      )}
+                    </VStack>
+                    <Button
+                      size="sm"
+                      colorScheme="red"
+                      onClick={() => handleDeleteClick(student)}
+                      isLoading={isLoading}
+                    >
+                      Deletar
+                    </Button>
                   </VStack>
                 )}
               </Td>
@@ -213,6 +383,7 @@ function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
                 onChange={(e) => setRejectReason(e.target.value)}
                 placeholder="Informe o motivo da rejeição..."
                 rows={4}
+                resize="vertical"
               />
             </FormControl>
           </ModalBody>
@@ -230,6 +401,80 @@ function StudentTable({ students, onStudentUpdate }: StudentTableProps) {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+
+
+      {/* AlertDialog para deletar aluno individual */}
+      <AlertDialog
+        isOpen={isDeleteOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Deletar Aluno
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Tem certeza que deseja deletar o aluno <strong>{selectedStudent?.nome}</strong>?
+              Esta ação não pode ser desfeita.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onDeleteClose}>
+                Cancelar
+              </Button>
+              <Button 
+                colorScheme="red" 
+                onClick={handleDeleteConfirm} 
+                ml={3}
+                isLoading={isLoading}
+              >
+                Deletar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      {/* AlertDialog para deletar alunos rejeitados */}
+      <AlertDialog
+        isOpen={isDeleteAllOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteAllClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Deletar Alunos Rejeitados
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Tem certeza que deseja deletar <strong>TODOS os {students.filter(s => s.statusSolicitacao === 'REJEITADO').length} alunos rejeitados</strong>?
+              Esta ação não pode ser desfeita e removerá permanentemente estes registros.
+              <br /><br />
+              <Text fontSize="sm" color="gray.600">
+                Alunos aprovados e pendentes não serão afetados.
+              </Text>
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onDeleteAllClose}>
+                Cancelar
+              </Button>
+              <Button 
+                colorScheme="red" 
+                onClick={handleDeleteAllConfirm} 
+                ml={3}
+                isLoading={isLoading}
+              >
+                Deletar Rejeitados
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 }

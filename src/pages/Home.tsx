@@ -42,10 +42,13 @@ import {
   FaArrowRight, 
   FaInstagram, 
   FaFacebook, 
-  FaWhatsapp 
+  FaWhatsapp,
+  FaCity,
+  FaHandsHelping,
+  FaLeaf
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 
 const MotionBox = motion(Box);
@@ -107,17 +110,20 @@ const AnimatedSection: React.FC<{ children: React.ReactNode }> = ({ children }) 
 function Home() {
   const navigate = useNavigate();
   const toast = useToast();
-  const [formData, setFormData] = React.useState({
-    name: '',
+  const [formData, setFormData] = useState({
+    nome: '',
     email: '',
-    phone: '',
-    message: ''
+    telefone: '',
+    mensagem: ''
   });
 
+  // Cores baseadas na identidade de Cidade Ocidental
   const bgGradient = useColorModeValue(
-    'linear(to-br, blue.50, orange.50)',
-    'linear(to-br, blue.900, orange.900)'
+    "linear(to-br, brand.100, sky.100, accent.100)",
+    "linear(to-br, brand.900, sky.900, accent.900)"
   );
+  const cardBg = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "gray.200");
 
   // Funções de navegação
   const handleCadastroClick = () => {
@@ -142,7 +148,7 @@ function Home() {
       duration: 3000,
       isClosable: true,
     });
-    setFormData({ name: '', email: '', phone: '', message: '' });
+    setFormData({ nome: '', email: '', telefone: '', mensagem: '' });
   };
 
   const benefits = [
@@ -626,7 +632,7 @@ function Home() {
                         <FormLabel>Nome</FormLabel>
                         <Input
                           name="name"
-                          value={formData.name}
+                          value={formData.nome}
                           onChange={handleInputChange}
                           placeholder="Seu nome completo"
                         />
@@ -647,7 +653,7 @@ function Home() {
                         <FormLabel>Telefone</FormLabel>
                         <Input
                           name="phone"
-                          value={formData.phone}
+                          value={formData.telefone}
                           onChange={handleInputChange}
                           placeholder="(61) 99999-9999"
                         />
@@ -657,7 +663,7 @@ function Home() {
                         <FormLabel>Mensagem</FormLabel>
                         <Textarea
                           name="message"
-                          value={formData.message}
+                          value={formData.mensagem}
                           onChange={handleInputChange}
                           placeholder="Sua mensagem..."
                           rows={4}

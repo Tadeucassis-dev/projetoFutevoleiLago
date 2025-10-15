@@ -49,7 +49,7 @@ export const getAllStudents = async (): Promise<Student[]> => {
 };
 
 export const getPendingStudents = async (): Promise<Student[]> => {
-  const response = await api.get('/alunos/solicitacoes/pendentes');
+  const response = await api.get('/alunos/solicitacoes-pendentes');
   return response.data;
 };
 
@@ -73,14 +73,31 @@ export const approveStudent = async (id: number): Promise<Student> => {
   return response.data;
 };
 
-export const rejectStudent = async (id: number, reason: RejectStudentRequest): Promise<Student> => {
-  const response = await api.put(`/alunos/${id}/rejeitar`, reason);
+export const rejectStudent = async (id: number, rejectData: RejectStudentRequest): Promise<Student> => {
+  // O backend espera o campo 'motivo' em vez de 'motivoRejeicao'
+  const payload = {
+    motivo: rejectData.motivoRejeicao
+  };
+  
+  const response = await api.post(`/alunos/${id}/rejeitar`, payload);
+  
+  // O backend retorna { success: true, message: "...", aluno: {...} }
+  if (response.data.success && response.data.aluno) {
+    return response.data.aluno;
+  }
+  
+  // Fallback caso a estrutura seja diferente
   return response.data;
 };
 
 export const processStudent = async (id: number, processData: ProcessStudentRequest): Promise<Student> => {
   const response = await api.put(`/alunos/${id}/processar`, processData);
   return response.data;
+};
+
+// Deletar aluno individual
+export const deleteStudent = async (id: number): Promise<void> => {
+  await api.delete(`/alunos/${id}`);
 };
 
 export default api;

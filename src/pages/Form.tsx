@@ -198,19 +198,6 @@ function Form() {
                 />
               </FormControl>
 
-              <FormControl id="idade" isRequired>
-                <FormLabel fontWeight="medium">Idade</FormLabel>
-                <Input
-                  type="number"
-                  value={idade}
-                  placeholder="Digite sua idade"
-                  border="1px solid"
-                  borderColor="gray.300"
-                  focusBorderColor="yellow.500"
-                  onChange={(e) => setIdade(e.target.value)}
-                />
-              </FormControl>
-
               <FormControl id="instituicaoEnsino" isRequired>
                 <FormLabel fontWeight="medium">Instituição de Ensino</FormLabel>
                 <Input
