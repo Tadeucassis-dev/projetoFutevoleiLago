@@ -134,6 +134,10 @@ function Home() {
     navigate('/login');
   };
 
+  const handleSaibaMaisClick = () => {
+    navigate('/saiba-mais');
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -280,14 +284,7 @@ function Home() {
           <Heading size="md" color="yellow.600">
             Futevôlei do Lago
           </Heading>
-          <HStack spacing={4}>
-            <Button
-              variant="ghost"
-              colorScheme="yellow"
-              onClick={handleCadastroClick}
-            >
-              Fazer Cadastro
-            </Button>
+          <HStack >
             <Button
               variant="outline"
               colorScheme="yellow"
@@ -354,6 +351,8 @@ function Home() {
                         variant="outline"
                         colorScheme="yellow"
                         leftIcon={<FaPlay />}
+                        onClick={handleSaibaMaisClick}
+                        {...scaleOnHover}
                       >
                         Saiba Mais
                       </Button>
