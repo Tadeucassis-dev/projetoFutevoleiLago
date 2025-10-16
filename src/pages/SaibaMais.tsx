@@ -26,15 +26,15 @@ import {
   StatNumber,
   StatHelpText,
   SimpleGrid,
-  useColorModeValue
-} from '@chakra-ui/react';
-import { motion } from 'framer-motion';
-import { 
-  FaVolleyballBall, 
-  FaUsers, 
-  FaSchool, 
-  FaMapMarkerAlt, 
-  FaClock, 
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import {
+  FaVolleyballBall,
+  FaUsers,
+  FaSchool,
+  FaMapMarkerAlt,
+  FaClock,
   FaHeart,
   FaArrowLeft,
   FaCheckCircle,
@@ -50,18 +50,18 @@ import {
   FaChartLine,
   FaAward,
   FaBookOpen,
-  FaRunning
-} from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+  FaRunning,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
 const staggerContainer = {
@@ -69,9 +69,9 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2
-    }
-  }
+      staggerChildren: 0.2,
+    },
+  },
 };
 
 function SaibaMais() {
@@ -87,73 +87,66 @@ function SaibaMais() {
   const headingColor = useColorModeValue("gray.800", "white");
 
   const handleBackClick = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleCadastroClick = () => {
-    navigate('/cadastro');
+    navigate("/cadastro");
   };
 
   return (
     <Box minH="100vh" bgGradient={bgGradient}>
       <Header />
-      
-      <Box pt="95px">
+
+      <Box pt="50px">
         {/* Hero Section */}
         <MotionBox
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
+          bg="gray.900"
         >
           <Box
+            bgColor={"black.900"}
             bgGradient="linear(135deg, brand.500 0%, accent.500 50%, brand.500 100%)"
-            color="white"
+            color="black"
             py={20}
             position="relative"
             overflow="hidden"
             _before={{
               content: '""',
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.2))',
-              zIndex: 0
+              zIndex: 0,
             }}
           >
             <Container maxW="7xl" position="relative" zIndex={1}>
               <VStack spacing={10} textAlign="center">
                 <MotionBox variants={fadeInUp}>
-                  <HStack justify="center" mb={8}>
-                    <Box className="logo-container">
-                      <Image
-                        src="/logoftv1.png"
-                        alt="Futevôlei do Lago"
-                        boxSize="100px"
-                        borderRadius="2xl"
-                        bg="black"
-                        p={2}
-                        boxShadow="0 8px 25px rgba(0,0,0,0.4)"
-                      />
-                    </Box>
-                  </HStack>
-                  <Heading 
-                    size="3xl" 
+                  <HStack justify="center" mb={8}></HStack>
+                  <Heading
+                    size="3xl"
                     mb={6}
                     fontWeight="900"
                     textShadow="0 2px 4px rgba(0,0,0,0.3)"
                     color="white"
                   >
-                    Conheça Mais Sobre o{' '}
-                    <Text as="span" color="accent.200" textShadow="0 2px 4px rgba(0,0,0,0.5)">
+                    Conheça Mais Sobre o{" "}
+                    <Text
+                      as="span"
+                      color="accent.200"
+                      textShadow="0 2px 4px rgba(0,0,0,0.5)"
+                    >
                       Futevôlei do Lago
                     </Text>
                   </Heading>
-                  <Text 
-                    fontSize="2xl" 
-                    maxW="4xl" 
-                    mx="auto" 
+                  <Text
+                    fontSize="2xl"
+                    maxW="4xl"
+                    mx="auto"
                     fontWeight="600"
                     textShadow="0 1px 2px rgba(0,0,0,0.2)"
                     color="white"
@@ -167,19 +160,20 @@ function SaibaMais() {
         </MotionBox>
 
         {/* Estatísticas do Projeto */}
-        <Box 
-          py={20} 
+        <Box
+          py={10}
           bg={cardBg}
           position="relative"
           _before={{
             content: '""',
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(34, 139, 34, 0.1) 0%, transparent 50%)',
-            zIndex: 0
+            backgroundImage:
+              "radial-gradient(circle at 50% 50%, rgba(34, 139, 34, 0.1) 0%, transparent 50%)",
+            zIndex: 0,
           }}
         >
           <Container maxW="7xl" position="relative" zIndex={1}>
@@ -192,13 +186,13 @@ function SaibaMais() {
               <VStack spacing={16}>
                 {/* Título da Seção */}
                 <MotionBox variants={fadeInUp} textAlign="center">
-                  <Heading 
-                    size="2xl" 
+                  <Heading
+                    size="2xl"
                     color={headingColor}
                     fontWeight="bold"
                     mb={4}
                   >
-                    Impacto do{' '}
+                    Impacto do{" "}
                     <Text as="span" color="brand.500">
                       Projeto
                     </Text>
@@ -209,28 +203,41 @@ function SaibaMais() {
                 </MotionBox>
 
                 {/* Estatísticas */}
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8} w="full">
-                  <MotionCard 
+                <SimpleGrid
+                  columns={{ base: 1, md: 2, lg: 4 }}
+                  spacing={8}
+                  w="full"
+                >
+                  <MotionCard
                     variants={fadeInUp}
                     bg={cardBg}
                     border="1px solid"
                     borderColor="brand.200"
-                    _hover={{ 
+                    _hover={{
                       boxShadow: "0 20px 40px rgba(34, 139, 34, 0.2)",
                       transform: "translateY(-5px)",
-                      borderColor: "brand.400"
+                      borderColor: "brand.400",
                     }}
                     transition="all 0.3s ease"
                   >
-                    <CardBody textAlign="center" p={8}>
-                      <Icon 
-                        as={FaUsers} 
-                        boxSize={12} 
+                    <CardBody
+                      textAlign="center"
+                      p={8}
+                      bgColor={""}
+                      bgColor={"yellow.300"}
+                    >
+                      <Icon
+                        as={FaUsers}
+                        boxSize={12}
                         color="brand.500"
                         mb={4}
                       />
                       <Stat>
-                        <StatNumber fontSize="3xl" color={headingColor} fontWeight="bold">
+                        <StatNumber
+                          fontSize="3xl"
+                          color={headingColor}
+                          fontWeight="bold"
+                        >
                           500+
                         </StatNumber>
                         <StatLabel color={textColor} fontSize="lg">
@@ -243,27 +250,37 @@ function SaibaMais() {
                     </CardBody>
                   </MotionCard>
 
-                  <MotionCard 
+                  <MotionCard
                     variants={fadeInUp}
                     bg={cardBg}
                     border="1px solid"
                     borderColor="brand.200"
-                    _hover={{ 
+                    _hover={{
                       boxShadow: "0 20px 40px rgba(34, 139, 34, 0.2)",
                       transform: "translateY(-5px)",
-                      borderColor: "brand.400"
+                      borderColor: "brand.400",
                     }}
                     transition="all 0.3s ease"
                   >
-                    <CardBody textAlign="center" p={8}>
-                      <Icon 
-                        as={FaMapMarkerAlt} 
-                        boxSize={12} 
+                    <CardBody
+                      textAlign="center"
+                      p={8}
+                      bgColor={""}
+                      bgColor={"yellow.300"}
+                    >
+                      {" "}
+                      <Icon
+                        as={FaMapMarkerAlt}
+                        boxSize={12}
                         color="accent.500"
                         mb={4}
                       />
                       <Stat>
-                        <StatNumber fontSize="3xl" color={headingColor} fontWeight="bold">
+                        <StatNumber
+                          fontSize="3xl"
+                          color={headingColor}
+                          fontWeight="bold"
+                        >
                           15
                         </StatNumber>
                         <StatLabel color={textColor} fontSize="lg">
@@ -276,60 +293,73 @@ function SaibaMais() {
                     </CardBody>
                   </MotionCard>
 
-                  <MotionCard 
+                  <MotionCard
                     variants={fadeInUp}
                     bg={cardBg}
                     border="1px solid"
                     borderColor="brand.200"
-                    _hover={{ 
+                    _hover={{
                       boxShadow: "0 20px 40px rgba(34, 139, 34, 0.2)",
                       transform: "translateY(-5px)",
-                      borderColor: "brand.400"
+                      borderColor: "brand.400",
                     }}
                     transition="all 0.3s ease"
                   >
-                    <CardBody textAlign="center" p={8}>
-                      <Icon 
-                        as={FaTrophy} 
-                        boxSize={12} 
-                        color="sky.500"
-                        mb={4}
-                      />
+                    <CardBody
+                      textAlign="center"
+                      p={8}
+                      bgColor={""}
+                      bgColor={"yellow.300"}
+                    >
+                      {" "}
+                      <Icon as={FaTrophy} boxSize={12} color="sky.500" mb={4} />
                       <Stat>
-                        <StatNumber fontSize="3xl" color={headingColor} fontWeight="bold">
+                        <StatNumber
+                          fontSize="3xl"
+                          color={headingColor}
+                          fontWeight="bold"
+                        >
                           25
                         </StatNumber>
                         <StatLabel color={textColor} fontSize="lg">
                           Competições
                         </StatLabel>
-                        <StatHelpText color="sky.500">
-                          Organizadas
-                        </StatHelpText>
+                        <StatHelpText color="sky.500">Organizadas</StatHelpText>
                       </Stat>
                     </CardBody>
                   </MotionCard>
 
-                  <MotionCard 
+                  <MotionCard
                     variants={fadeInUp}
                     bg={cardBg}
                     border="1px solid"
                     borderColor="brand.200"
-                    _hover={{ 
+                    _hover={{
                       boxShadow: "0 20px 40px rgba(34, 139, 34, 0.2)",
                       transform: "translateY(-5px)",
-                      borderColor: "brand.400"
+                      borderColor: "brand.400",
                     }}
                     transition="all 0.3s ease"
                   >
-                    <CardBody textAlign="center" p={8}>
-                      <Icon 
-                        as={FaAward} 
-                        boxSize={12} 
+                    <CardBody
+                      textAlign="center"
+                      p={8}
+                      bgColor={""}
+                      bgColor={"yellow.300"}
+                    >
+                      {" "}
+                      <Icon
+                        as={FaAward}
+                        boxSize={12}
                         color="brand.500"
                         mb={4}
                       />
                       <Stat>
-                        <StatNumber fontSize="3xl" color={headingColor} fontWeight="bold">
+                        <StatNumber
+                          fontSize="3xl"
+                          color={headingColor}
+                          fontWeight="bold"
+                        >
                           95%
                         </StatNumber>
                         <StatLabel color={textColor} fontSize="lg">
@@ -344,39 +374,43 @@ function SaibaMais() {
                 </SimpleGrid>
 
                 {/* Metodologia */}
-                <MotionCard 
-                  variants={fadeInUp} 
-                  w="full" 
+                <MotionCard
+                  variants={fadeInUp}
+                  w="full"
                   bg={cardBg}
                   border="1px solid"
                   borderColor="brand.200"
-                  _hover={{ 
+                  _hover={{
                     boxShadow: "0 25px 50px rgba(34, 139, 34, 0.2)",
                     transform: "translateY(-5px)",
-                    borderColor: "brand.400"
+                    borderColor: "brand.400",
                   }}
                   transition="all 0.3s ease"
                 >
-                  <CardBody p={12}>
+                  <CardBody p={12} bgColor={"yellow.300"}>
                     <VStack spacing={8}>
-                      <Heading 
-                        size="xl" 
-                        color={headingColor} 
+                      <Heading
+                        size="xl"
+                        color={headingColor}
                         textAlign="center"
                         fontWeight="bold"
                       >
-                        Nossa{' '}
+                        Nossa{" "}
                         <Text as="span" color="brand.500">
                           Metodologia
                         </Text>
                       </Heading>
-                      
-                      <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12} w="full">
+
+                      <Grid
+                        templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
+                        gap={12}
+                        w="full"
+                      >
                         <VStack spacing={6} align="start">
                           <HStack spacing={4}>
-                            <Icon 
-                              as={FaBookOpen} 
-                              boxSize={8} 
+                            <Icon
+                              as={FaBookOpen}
+                              boxSize={8}
                               color="brand.500"
                             />
                             <Heading size="md" color={headingColor}>
@@ -384,15 +418,16 @@ function SaibaMais() {
                             </Heading>
                           </HStack>
                           <Text color={textColor} lineHeight="tall">
-                            Utilizamos o esporte como ferramenta educativa, desenvolvendo 
-                            não apenas habilidades físicas, mas também valores como 
-                            disciplina, respeito e trabalho em equipe.
+                            Utilizamos o esporte como ferramenta educativa,
+                            desenvolvendo não apenas habilidades físicas, mas
+                            também valores como disciplina, respeito e trabalho
+                            em equipe.
                           </Text>
-                          
+
                           <HStack spacing={4}>
-                            <Icon 
-                              as={FaRunning} 
-                              boxSize={8} 
+                            <Icon
+                              as={FaRunning}
+                              boxSize={8}
                               color="accent.500"
                             />
                             <Heading size="md" color={headingColor}>
@@ -400,17 +435,17 @@ function SaibaMais() {
                             </Heading>
                           </HStack>
                           <Text color={textColor} lineHeight="tall">
-                            Focamos no desenvolvimento físico, mental e social das 
-                            crianças, proporcionando uma formação completa através 
-                            do futevôlei.
+                            Focamos no desenvolvimento físico, mental e social
+                            das crianças, proporcionando uma formação completa
+                            através do futevôlei.
                           </Text>
                         </VStack>
 
                         <VStack spacing={6} align="start">
                           <HStack spacing={4}>
-                            <Icon 
-                              as={FaHandsHelping} 
-                              boxSize={8} 
+                            <Icon
+                              as={FaHandsHelping}
+                              boxSize={8}
                               color="sky.500"
                             />
                             <Heading size="md" color={headingColor}>
@@ -418,25 +453,21 @@ function SaibaMais() {
                             </Heading>
                           </HStack>
                           <Text color={textColor} lineHeight="tall">
-                            Promovemos a inclusão de crianças de diferentes backgrounds 
-                            socioeconômicos, criando um ambiente de igualdade e 
-                            oportunidades para todos.
+                            Promovemos a inclusão de crianças de diferentes
+                            backgrounds socioeconômicos, criando um ambiente de
+                            igualdade e oportunidades para todos.
                           </Text>
-                          
+
                           <HStack spacing={4}>
-                            <Icon 
-                              as={FaLeaf} 
-                              boxSize={8} 
-                              color="brand.500"
-                            />
+                            <Icon as={FaLeaf} boxSize={8} color="brand.500" />
                             <Heading size="md" color={headingColor}>
                               Sustentabilidade
                             </Heading>
                           </HStack>
                           <Text color={textColor} lineHeight="tall">
-                            Educamos sobre consciência ambiental e sustentabilidade, 
-                            utilizando materiais recicláveis e promovendo o cuidado 
-                            com o meio ambiente.
+                            Educamos sobre consciência ambiental e
+                            sustentabilidade, utilizando materiais recicláveis e
+                            promovendo o cuidado com o meio ambiente.
                           </Text>
                         </VStack>
                       </Grid>
@@ -445,34 +476,41 @@ function SaibaMais() {
                 </MotionCard>
 
                 {/* FAQ */}
-                <MotionBox variants={fadeInUp} w="full">
-                  <Heading 
-                    size="xl" 
-                    color={headingColor} 
+                <MotionBox variants={fadeInUp} w="full" >
+                  <Heading
+                    size="xl"
+                    color={headingColor}
                     textAlign="center"
                     fontWeight="bold"
                     mb={8}
                   >
-                    Perguntas{' '}
+                    Perguntas{" "}
                     <Text as="span" color="brand.500">
                       Frequentes
                     </Text>
                   </Heading>
-                  
+
                   <Accordion allowMultiple>
-                    <AccordionItem 
+                    <AccordionItem
                       border="1px solid"
                       borderColor="brand.200"
                       borderRadius="lg"
                       mb={4}
                       bg={cardBg}
                     >
-                      <AccordionButton 
+                      <AccordionButton
+                        color="white"
+                        bgColor={"gray.600"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
                         <Box flex="1" textAlign="left">
-                          <Text color={headingColor} fontWeight="bold" fontSize="lg">
+                          <Text
+                            color={headingColor}
+                            fontWeight="bold"
+                            fontSize="lg"
+                            color="white"
+                          >
                             Como posso inscrever meu filho no projeto?
                           </Text>
                         </Box>
@@ -480,27 +518,34 @@ function SaibaMais() {
                       </AccordionButton>
                       <AccordionPanel pb={4}>
                         <Text color={textColor} lineHeight="tall">
-                          A inscrição é feita através do nosso site. Basta preencher 
-                          o formulário de cadastro com os dados da criança. Após a 
-                          análise, entraremos em contato para confirmar a vaga e 
-                          informar a arena mais próxima.
+                          A inscrição é feita através do nosso site. Basta
+                          preencher o formulário de cadastro com os dados da
+                          criança. Após a análise, entraremos em contato para
+                          confirmar a vaga e informar a arena mais próxima.
                         </Text>
                       </AccordionPanel>
                     </AccordionItem>
 
-                    <AccordionItem 
+                    <AccordionItem
                       border="1px solid"
                       borderColor="brand.200"
                       borderRadius="lg"
                       mb={4}
                       bg={cardBg}
                     >
-                      <AccordionButton 
+                      <AccordionButton
+                        color="white"
+                        bgColor={"gray.600"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
                         <Box flex="1" textAlign="left">
-                          <Text color={headingColor} fontWeight="bold" fontSize="lg">
+                          <Text
+                            color={headingColor}
+                            fontWeight="bold"
+                            fontSize="lg"
+                            color="white"
+                          >
                             Qual é a idade mínima e máxima para participar?
                           </Text>
                         </Box>
@@ -508,26 +553,33 @@ function SaibaMais() {
                       </AccordionButton>
                       <AccordionPanel pb={4}>
                         <Text color={textColor} lineHeight="tall">
-                          O projeto atende crianças e adolescentes de 8 a 14 anos, 
-                          que estejam matriculados em escolas públicas de Cidade 
-                          Ocidental - GO.
+                          O projeto atende crianças e adolescentes de 8 a 14
+                          anos, que estejam matriculados em escolas públicas de
+                          Cidade Ocidental - GO.
                         </Text>
                       </AccordionPanel>
                     </AccordionItem>
 
-                    <AccordionItem 
+                    <AccordionItem
                       border="1px solid"
                       borderColor="brand.200"
                       borderRadius="lg"
                       mb={4}
                       bg={cardBg}
                     >
-                      <AccordionButton 
+                      <AccordionButton
+                        color="white"
+                        bgColor={"gray.600"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
                         <Box flex="1" textAlign="left">
-                          <Text color={headingColor} fontWeight="bold" fontSize="lg">
+                          <Text
+                            color={headingColor}
+                            fontWeight="bold"
+                            fontSize="lg"
+                            color="white"
+                          >
                             As aulas são gratuitas?
                           </Text>
                         </Box>
@@ -535,26 +587,33 @@ function SaibaMais() {
                       </AccordionButton>
                       <AccordionPanel pb={4}>
                         <Text color={textColor} lineHeight="tall">
-                          Sim! O projeto é 100% gratuito para todas as crianças 
-                          participantes. Nosso objetivo é democratizar o acesso ao 
-                          esporte e à educação através do futevôlei.
+                          Sim! O projeto é 100% gratuito para todas as crianças
+                          participantes. Nosso objetivo é democratizar o acesso
+                          ao esporte e à educação através do futevôlei.
                         </Text>
                       </AccordionPanel>
                     </AccordionItem>
 
-                    <AccordionItem 
+                    <AccordionItem
                       border="1px solid"
                       borderColor="brand.200"
                       borderRadius="lg"
                       mb={4}
                       bg={cardBg}
                     >
-                      <AccordionButton 
+                      <AccordionButton
+                        color="white"
+                        bgColor={"gray.600"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
                         <Box flex="1" textAlign="left">
-                          <Text color={headingColor} fontWeight="bold" fontSize="lg">
+                          <Text
+                            color={headingColor}
+                            fontWeight="bold"
+                            fontSize="lg"
+                            color="white"
+                          >
                             Quais materiais são necessários?
                           </Text>
                         </Box>
@@ -562,10 +621,10 @@ function SaibaMais() {
                       </AccordionButton>
                       <AccordionPanel pb={4}>
                         <Text color={textColor} lineHeight="tall">
-                          Fornecemos todos os equipamentos necessários para a prática 
-                          do futevôlei. As crianças precisam apenas usar roupas 
-                          confortáveis para atividade física e trazer uma garrafa 
-                          de água.
+                          Fornecemos todos os equipamentos necessários para a
+                          prática do futevôlei. As crianças precisam apenas usar
+                          roupas confortáveis para atividade física e trazer uma
+                          garrafa de água.
                         </Text>
                       </AccordionPanel>
                     </AccordionItem>
@@ -573,37 +632,37 @@ function SaibaMais() {
                 </MotionBox>
 
                 {/* Call to Action */}
-                <MotionBox variants={fadeInUp} textAlign="center">
+                <MotionBox
+                  variants={fadeInUp}
+                  textAlign="center"
+                  borderRadius={"1px solid"}
+                >
                   <VStack spacing={6}>
-                    <Heading 
-                      size="lg" 
-                      color={headingColor} 
-                      fontWeight="bold"
-                    >
-                      Pronto para Fazer Parte do{' '}
-                      <Text as="span" color="brand.500">
+                    <Heading size="lg" fontWeight="bold">
+                      Pronto para Fazer Parte do{" "}
+                      <Text as="span" color="brand.500" color="yellow.500">
                         Futevôlei do Lago?
                       </Text>
                     </Heading>
-                    <Text 
-                      fontSize="lg" 
-                      color={textColor} 
+                    <Text
+                      fontSize="lg"
+                      color={textColor}
                       maxW="2xl"
                       lineHeight="tall"
                     >
-                      Inscreva seu filho agora e proporcione uma experiência única 
-                      de crescimento através do esporte!
+                      Inscreva seu filho agora e proporcione uma experiência
+                      única de crescimento através do esporte!
                     </Text>
                     <HStack spacing={4}>
                       <Button
                         size="lg"
-                        bgGradient="linear(45deg, brand.500, accent.500)"
+                        bgColor={"black"}
                         color="white"
                         fontWeight="bold"
-                        _hover={{ 
+                        _hover={{
                           bgGradient: "linear(45deg, brand.600, accent.600)",
                           transform: "translateY(-3px)",
-                          boxShadow: "0 10px 25px rgba(34, 139, 34, 0.3)"
+                          boxShadow: "0 10px 25px rgba(34, 139, 34, 0.3)",
                         }}
                         boxShadow="0 4px 15px rgba(34, 139, 34, 0.2)"
                         onClick={handleCadastroClick}
@@ -618,12 +677,12 @@ function SaibaMais() {
                         borderColor="brand.500"
                         color="brand.500"
                         fontWeight="bold"
-                        _hover={{ 
+                        _hover={{
                           bg: "brand.50",
                           transform: "translateY(-3px)",
                           borderColor: "brand.600",
                           color: "brand.600",
-                          boxShadow: "0 10px 25px rgba(34, 139, 34, 0.2)"
+                          boxShadow: "0 10px 25px rgba(34, 139, 34, 0.2)",
                         }}
                         onClick={handleBackClick}
                         leftIcon={<FaArrowLeft />}
@@ -639,8 +698,6 @@ function SaibaMais() {
           </Container>
         </Box>
       </Box>
-       
-      <Footer />
     </Box>
   );
 }

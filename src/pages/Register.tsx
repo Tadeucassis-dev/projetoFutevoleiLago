@@ -13,6 +13,8 @@ import {
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function Register() {
   const [name, setName] = useState("");
@@ -76,15 +78,18 @@ function Register() {
   };
 
   return (
-    <Box
-      height="100vh"
-      bgGradient={bgGradient}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      px={{ base: 4, md: 8 }}
-      py={12}
-    >
+    <Box>
+      <Header />
+      <Box
+        height="100vh"
+        bgGradient={bgGradient}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        px={{ base: 4, md: 8 }}
+        py={12}
+        pt="105px" // Adicionar padding-top para compensar o header fixo
+      >
       <Box flex="1" maxW="400px" mx="auto" p={8}>
         <Heading mb={6} color="black">
           Registrar
@@ -141,6 +146,8 @@ function Register() {
           </VStack>
         </form>
       </Box>
+    </Box>
+    
     </Box>
   );
 }

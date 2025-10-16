@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { getAllStudents, getPendingStudents, getActiveStudents } from '../services/api';
 import StudentTable from '../components/StudentTable';
 import { Student } from '../types';
+import Footer from '../components/Footer';
 
 function AdminDashboard() {
   const [allStudents, setAllStudents] = useState<Student[]>([]);
@@ -194,6 +195,8 @@ function AdminDashboard() {
           </Box>
         </VStack>
       </Box>
+      
+      <Footer />
     </Box>
   );
 }

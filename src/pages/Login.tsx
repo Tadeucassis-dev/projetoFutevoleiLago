@@ -23,6 +23,8 @@ import { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
 import { useAuth } from "../contexts/AuthContext";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -95,27 +97,30 @@ function Login() {
   };
 
   return (
-    <Box 
-      minHeight="100vh"
-      bgGradient={bgGradient}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      px={{ base: 4, md: 8 }}
-      py={12}
-      position="relative"
-    >
-      {/* Botão Voltar */}
-       <IconButton
-        aria-label="Voltar para home"
-        icon={<FaArrowLeft />}
-        position="absolute"
-        top={4}
-        left={4}
-        onClick={handleBackToHome}
-        variant="ghost"
-        size="lg"
-      />
+    <Box>
+      <Header />
+      <Box 
+        minHeight="100vh"
+        bgGradient={bgGradient}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        px={{ base: 4, md: 8 }}
+        py={12}
+        pt="105px" // Adicionar padding-top para compensar o header fixo
+        position="relative"
+      >
+        {/* Botão Voltar */}
+         <IconButton
+          aria-label="Voltar para home"
+          icon={<FaArrowLeft />}
+          position="absolute"
+          top="105px" // Ajustar posição para ficar abaixo do header
+          left={4}
+          onClick={handleBackToHome}
+          variant="ghost"
+          size="lg"
+        />
       <Card maxW="400px" w="full" bg={cardBg} shadow="xl">
         <CardBody p={8}>
           <VStack spacing={6}>
@@ -198,6 +203,8 @@ function Login() {
           </VStack>
         </CardBody>
       </Card>
+    </Box>
+    
     </Box>
   );
 }

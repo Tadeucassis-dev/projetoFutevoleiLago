@@ -24,7 +24,13 @@ import {
   Divider,
   Stack,
   Center,
-  useColorModeValue
+  useColorModeValue,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  ModalBody,
+  useDisclosure
 } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { motion, useAnimation } from 'framer-motion';
@@ -50,6 +56,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import React from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
+// Importações das fotos do projeto
+import logoftv1 from '../assets/logoftv1.png';
+import foto101 from '../assets/FVDL-101.jpg';
+import foto107 from '../assets/FVDL-107.jpg';
+import foto111 from '../assets/FVDL-111.jpg';
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
@@ -117,6 +131,16 @@ function Home() {
     mensagem: ''
   });
 
+  // Estado do modal para galeria
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedImage, setSelectedImage] = useState('');
+
+  // Função para abrir modal com imagem selecionada
+  const handleImageClick = (imageSrc: string) => {
+    setSelectedImage(imageSrc);
+    onOpen();
+  };
+
   // Cores baseadas na identidade de Cidade Ocidental
   const bgGradient = useColorModeValue(
     "linear(to-br, brand.100, sky.100, accent.100)",
@@ -160,25 +184,25 @@ function Home() {
       icon: FaHeart,
       title: 'Saúde e Bem-estar',
       description: 'Atividade física completa que fortalece corpo e mente',
-      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'
+      image: foto101
     },
     {
       icon: FaUsers,
       title: 'Inclusão Social',
       description: 'Promovemos integração e amizades duradouras',
-      image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=300&fit=crop'
+      image: foto107
     },
     {
       icon: FaTrophy,
       title: 'Desenvolvimento Pessoal',
       description: 'Construa confiança e disciplina através do esporte',
-      image: 'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=400&h=300&fit=crop'
+      image: foto111
     },
     {
       icon: FaVolleyballBall,
       title: 'Técnica Profissional',
       description: 'Aprenda com instrutores qualificados e experientes',
-      image: 'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=400&h=300&fit=crop'
+      image: foto107
     }
   ];
 
@@ -218,87 +242,22 @@ function Home() {
       rating: 5,
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face'
     },
-    {
-      name: 'Pedro Almeida',
-      age: 38,
-      text: 'Minha condição física melhorou drasticamente e minha autoestima também. Recomendo!',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face'
-    },
-    {
-      name: 'Camila Santos',
-      age: 24,
-      text: 'O ambiente é super acolhedor e os professores são muito atenciosos com todos os alunos.',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop&crop=face'
-    },
-    {
-      name: 'Lucas Ferreira',
-      age: 33,
-      text: 'Participar deste projeto foi uma das melhores decisões da minha vida. Transformação total!',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop&crop=face'
-    },
-    {
-      name: 'Fernanda Lima',
-      age: 31,
-      text: 'Excelente iniciativa! Meus filhos desenvolveram muito a coordenação e fizeram grandes amizades.',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face'
-    },
-    {
-      name: 'Diego Souza',
-      age: 27,
-      text: 'Lugar perfeito para quem quer se exercitar, se divertir e conhecer pessoas especiais.',
-      rating: 5,
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
-    }
+ 
+  
   ];
 
   const galleryImages = [
-    'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=500&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1567013127542-490d757e51cd?w=500&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=500&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=500&h=400&fit=crop'
+    foto101,
+    foto107,
+    foto111,  
   ];
 
   return (
     <Box>
-      {/* Header com navegação */}
-      <Box
-        position="fixed"
-        top={0}
-        left={0}
-        right={0}
-        zIndex={1000}
-        bg="rgba(255, 255, 255, 0.95)"
-        backdropFilter="blur(10px)"
-        borderBottom="1px solid"
-        borderColor="gray.200"
-        px={8}
-        py={4}
-      >
-        <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
-          <Heading size="md" color="yellow.600">
-            Futevôlei do Lago
-          </Heading>
-          <HStack >
-            <Button
-              variant="outline"
-              colorScheme="yellow"
-              size="sm"
-              onClick={handleAdminClick}
-            >
-              Admin
-            </Button>
-          </HStack>
-        </Flex>
-      </Box>
-
+      <Header />
+      
       {/* Adicionar padding-top para compensar o header fixo */}
-      <Box pt="80px">
+      <Box pt="10px">
         {/* Hero Section */}
         <AnimatedSection>
           <Box
@@ -308,7 +267,7 @@ function Home() {
             alignItems="center"
             justifyContent="center"
             px={{ base: 4, md: 8 }}
-            py={20}
+            py={10}
           >
             <Container maxW="1200px">
               <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12} alignItems="center">
@@ -322,7 +281,7 @@ function Home() {
                       lineHeight="shorter"
                     >
                       Transforme sua vida através do{' '}
-                      <Text as="span" color="yellow.600">
+                      <Text as="span" color="yellow.500">
                         Futevôlei
                       </Text>
                     </Heading>
@@ -338,6 +297,8 @@ function Home() {
                   <MotionBox variants={fadeInUp}>
                     <HStack spacing={4}>
                       <Button
+                      bg="gray.900"
+                      color="white"
                         size="lg"
                         colorScheme="yellow"
                         rightIcon={<FaArrowRight />}
@@ -349,7 +310,7 @@ function Home() {
                       <Button
                         size="lg"
                         variant="outline"
-                        colorScheme="yellow"
+                        colorScheme="gray.900"
                         leftIcon={<FaPlay />}
                         onClick={handleSaibaMaisClick}
                         {...scaleOnHover}
@@ -362,11 +323,14 @@ function Home() {
 
                 <MotionBox variants={fadeInUp}>
                   <Image
-                    src="https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=500&fit=crop"
-                    alt="Futevôlei na praia"
+                    src={logoftv1}
+                    alt="Futevôlei do Lago - Projeto Social"
                     borderRadius="2xl"
                     boxShadow="2xl"
                     animation={`${float} 6s ease-in-out infinite`}
+                    maxW="600px"
+                    maxH="500px"
+                    objectFit="cover"
                   />
                 </MotionBox>
               </Grid>
@@ -376,7 +340,7 @@ function Home() {
 
         {/* Benefits Section */}
         <AnimatedSection>
-          <Box py={20} px={{ base: 4, md: 8 }} bg="white">
+          <Box py={2} px={{ base: 4, md: 8 }} bg="white">
             <Container maxW="1200px">
               <VStack spacing={16}>
                 <VStack spacing={4} textAlign="center">
@@ -439,9 +403,9 @@ function Home() {
                   </Text>
                 </VStack>
 
-                <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={8}>
+                <Grid >
                   {/* Coluna 1 - Primeiros 5 depoimentos */}
-                  <VStack spacing={6}>
+                  <HStack spacing={6}>
                     {testimonials.slice(0, 5).map((testimonial, index) => (
                       <MotionCard
                         key={index}
@@ -477,7 +441,7 @@ function Home() {
                         </CardBody>
                       </MotionCard>
                     ))}
-                  </VStack>
+                  </HStack>
 
                   {/* Coluna 2 - Últimos 5 depoimentos */}
                   <VStack spacing={6}>
@@ -573,19 +537,19 @@ function Home() {
 
                   <VStack spacing={4} align="start">
                     <HStack spacing={3}>
-                      <Icon as={FaMapMarkerAlt} color="yellow.500" boxSize={5} />
+                      <Icon as={FaMapMarkerAlt} color="gray.900" boxSize={5} />
                       <Text color="gray.700">
-                        Praia do Lago, Brasília - DF
+                        quadra do lago jacob, Cidade Ocidental - GO
                       </Text>
                     </HStack>
                     <HStack spacing={3}>
-                      <Icon as={FaPhone} color="yellow.500" boxSize={5} />
+                      <Icon as={FaPhone} color="gray.900" boxSize={5} />
                       <Text color="gray.700">
-                        (61) 99999-9999
+                        (61) 98579-5880
                       </Text>
                     </HStack>
                     <HStack spacing={3}>
-                      <Icon as={FaEnvelope} color="yellow.500" boxSize={5} />
+                      <Icon as={FaEnvelope} color="gray.900" boxSize={5} />
                       <Text color="gray.700">
                         contato@futevoleidolago.com.br
                       </Text>
@@ -603,6 +567,7 @@ function Home() {
                     </Button>
                     <Button
                       leftIcon={<FaFacebook />}
+                      color="blue.500"
                       colorScheme="facebook"
                       variant="outline"
                       size="sm"
@@ -612,6 +577,7 @@ function Home() {
                     <Button
                       leftIcon={<FaWhatsapp />}
                       colorScheme="whatsapp"
+                      color="green.500"
                       variant="outline"
                       size="sm"
                     >
@@ -671,7 +637,8 @@ function Home() {
 
                       <Button
                         type="submit"
-                        colorScheme="yellow"
+                        bg={ "gray.900"}
+                        colorScheme="gray.900"
                         size="lg"
                         w="full"
                         rightIcon={<FaArrowRight />}
@@ -688,7 +655,7 @@ function Home() {
 
         {/* CTA Final */}
         <AnimatedSection>
-          <Box py={20} px={{ base: 4, md: 8 }} bg="yellow.500">
+          <Box py={5} px={{ base: 4, md: 8 }} bg="black">
             <Container maxW="800px">
               <VStack spacing={8} textAlign="center">
                 <Heading size="xl" color="white">
@@ -700,10 +667,10 @@ function Home() {
                 <Button
                   size="lg"
                   bg="white"
-                  color="yellow.500"
+                  color="black"
                   rightIcon={<FaArrowRight />}
                   onClick={handleCadastroClick}
-                  _hover={{ bg: "gray.100" }}
+                  _hover={{ bg: "gray.300" }}
                   animation={`${pulse} 2s infinite`}
                 >
                   Fazer Cadastro Agora
@@ -713,6 +680,34 @@ function Home() {
           </Box>
         </AnimatedSection>
       </Box>
+      
+      {/* Modal para visualização ampliada das fotos */}
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
+        <ModalOverlay bg="blackAlpha.800" />
+        <ModalContent bg="transparent" boxShadow="none" maxW="90vw" maxH="90vh">
+          <ModalCloseButton 
+            color="white" 
+            size="lg" 
+            bg="blackAlpha.600" 
+            _hover={{ bg: "blackAlpha.800" }}
+            borderRadius="full"
+            top={4}
+            right={4}
+            zIndex={2}
+          />
+          <ModalBody p={0} display="flex" alignItems="center" justifyContent="center">
+            <Image
+              src={selectedImage}
+              alt="Futevôlei do Lago - Foto ampliada"
+              maxW="100%"
+              maxH="100%"
+              objectFit="contain"
+              borderRadius="lg"
+              boxShadow="2xl"
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
