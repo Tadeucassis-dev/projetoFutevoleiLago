@@ -8,16 +8,18 @@ import Form from './pages/Form';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import SaibaMais from './pages/SaibaMais';
 import theme from './theme';
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider >
       <ErrorBoundary>
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/cadastro" element={<Form />} />
+            <Route path="/saiba-mais" element={<SaibaMais />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route 

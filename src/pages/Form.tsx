@@ -15,6 +15,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createStudent } from "../services/api";
 import { StudentCreateRequest } from "../types";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function Form() {
   const [nome, setNome] = useState("");
@@ -87,15 +89,18 @@ function Form() {
   };
 
   return (
-    <Box
-      minHeight="100vh"
-      bgGradient={bgGradient}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      px={{ base: 4, md: 8 }}
-      py={12}
-    >
+    <Box>
+      <Header />
+      <Box
+        minHeight="100vh"
+        bgGradient={bgGradient}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        px={{ base: 4, md: 8 }}
+        py={12}
+        pt="105px" // Adicionar padding-top para compensar o header fixo
+      >
       <Flex
         direction={{ base: "column", md: "row" }}
         maxW="1200px"
@@ -227,7 +232,9 @@ function Form() {
           </form>
         </Box>
       </Flex>
+      
     </Box>
+     </Box>
   );
 }
 
