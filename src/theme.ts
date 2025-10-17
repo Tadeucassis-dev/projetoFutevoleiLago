@@ -126,6 +126,14 @@ const theme = extendTheme({
       },
     },
   },
+  breakpoints: {
+    xs: '20em',  // 320px (celulares pequenos)
+    sm: '30em',  // 480px
+    md: '48em',  // 768px (tablets)
+    lg: '62em',  // 992px
+    xl: '80em',  // 1280px
+    '2xl': '96em'
+  },
 });
 
 export default theme;

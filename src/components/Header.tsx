@@ -14,23 +14,23 @@ function Header() {
     <Box 
       as="header"
       bg="gray.900"
-      p="8px"
+      p={{ base: 2, md: '8px' }}
       position="fixed"
       top={0}
       left={0}
       right={0}
       zIndex={10}
-      h="85px" // Altura aumentada
+      h={{ base: '64px', md: '85px' }}
      >
-      <Flex justify="space-between" align="center" h="100%" >
+      <Flex justify="space-between" align="center" h="100%" direction="row">
         {/* Logo à esquerda */}
         <Flex align="center" flex="1">
-          <Image src="/logoftv1.png" alt="Logo" boxSize="120px" />
+          <Image src="/logoftv1.png" alt="Logo" boxSize={{ base: '48px', md: '120px' }} />
         </Flex>
         
         {/* Nome centralizado */}
-        <Flex justify="center" flex="2">
-          <Heading size="lg" color="white" textAlign="center">
+        <Flex justify="center" flex="2" minW={0}>
+          <Heading color="white" textAlign="center" fontSize={{ base: 'sm', sm: 'md', md: 'xl' }} noOfLines={1}>
             Projeto Futevôlei do Lago
           </Heading>
         </Flex>
@@ -39,10 +39,10 @@ function Header() {
         <Flex align="center" justify="flex-end" flex="1">
           {user && (
             <>
-              <Box mr={4} color="white" fontSize="sm">
+              <Box mr={4} color="white" fontSize={{ base: 'xs', md: 'sm' }}>
                 Bem-vindo, {user.name ?? user.email}
               </Box>
-              <Button onClick={logout} mr={2} variant="outline" size="sm">
+              <Button onClick={logout} mr={2} variant="outline" size={{ base: 'xs', md: 'sm' }}>
                 Sair
               </Button>
             </>
@@ -52,9 +52,10 @@ function Header() {
               bgColor="white"
               variant="outline"
               colorScheme="white"
-              size="sm"
+              size={{ base: 'xs', md: 'sm' }}
               onClick={handleAdminClick}
-              mr={4}
+              mr={{ base: 0, md: 4 }}
+              display={{ base: 'none', md: 'inline-flex' }}
             >
               Admin
             </Button>
