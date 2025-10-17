@@ -260,7 +260,7 @@ function Home() {
       <Header />
 
       {/* Adicionar padding-top para compensar o header fixo */}
-      <Box pt="10px">
+      <Box pt={{ base: '10px', md: '85px' }}>
         {/* Hero Section */}
         <AnimatedSection>
           <Box
@@ -270,19 +270,19 @@ function Home() {
             alignItems="center"
             justifyContent="center"
             px={{ base: 4, md: 8 }}
-            py={10}
+            py={{ base: 4, md: 10 }}
           >
-            <Container maxW="1200px">
+            <Container maxW={{ base: 'container.md', md: 'container.lg', xl: '1200px' }}>
               <Grid
-                templateColumns={{ base: "1fr", lg: "1fr 1fr" }}
-                gap={12}
+                templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+                gap={{ base: 8, md: 12 }}
                 alignItems="center"
               >
-                <VStack spacing={8} align="start">
+                <VStack spacing={{ base: 6, md: 8 }} align="start">
                   <MotionBox variants={fadeInUp}>
                     <Heading
                       as="h1"
-                      size="2xl"
+                      fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
                       fontWeight="bold"
                       color="gray.800"
                       lineHeight="shorter"
@@ -295,7 +295,7 @@ function Home() {
                   </MotionBox>
 
                   <MotionBox variants={fadeInUp}>
-                    <Text fontSize="xl" color="gray.600" lineHeight="tall">
+                    <Text fontSize={{ base: "md", md: "lg", lg: "xl" }} color="gray.600" lineHeight="tall">
                       Junte-se à nossa comunidade e descubra o poder
                       transformador do esporte. Saúde, amizade e diversão em um
                       só lugar!
@@ -303,29 +303,31 @@ function Home() {
                   </MotionBox>
 
                   <MotionBox variants={fadeInUp}>
-                    <HStack spacing={4}>
+                    <Stack spacing={4} direction={{ base: "column", sm: "row" }} w="full">
                       <Button
                         bg="gray.900"
                         color="white"
-                        size="lg"
+                        size={{ base: "md", md: "lg" }}
                         colorScheme="yellow"
                         rightIcon={<FaArrowRight />}
                         onClick={handleCadastroClick}
                         {...scaleOnHover}
+                        w={{ base: "full", sm: "auto" }}
                       >
                         Inscreva-se Agora
                       </Button>
                       <Button
-                        size="lg"
+                        size={{ base: "md", md: "lg" }}
                         variant="outline"
                         colorScheme="gray.900"
                         leftIcon={<FaPlay />}
                         onClick={handleSaibaMaisClick}
                         {...scaleOnHover}
+                        w={{ base: "full", sm: "auto" }}
                       >
                         Saiba Mais
                       </Button>
-                    </HStack>
+                    </Stack>
                   </MotionBox>
                 </VStack>
 
@@ -336,8 +338,9 @@ function Home() {
                     borderRadius="2xl"
                     boxShadow="2xl"
                     animation={`${float} 6s ease-in-out infinite`}
-                    maxW="600px"
-                    maxH="500px"
+                    w={{ base: "100%", md: "600px" }}
+                    h={{ base: "auto", md: "500px" }}
+                    maxW="100%"
                     objectFit="cover"
                   />
                 </MotionBox>
@@ -402,21 +405,21 @@ function Home() {
         {/* Testimonials Section */}
         <AnimatedSection>
           <Box py={20} px={{ base: 4, md: 8 }} bgGradient={bgGradient}>
-            <Container maxW="1200px">
+            <Container maxW={{ base: 'container.md', md: 'container.lg', xl: '1200px' }}>
               <VStack spacing={16}>
                 <VStack spacing={4} textAlign="center">
-                  <Heading size="xl" color="gray.800">
+                  <Heading fontSize={{ base: '2xl', md: '3xl' }} color="gray.800">
                     Depoimentos
                   </Heading>
-                  <Text fontSize="lg" color="gray.600" maxW="600px">
+                  <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" maxW="600px">
                     Veja o que nossos alunos têm a dizer sobre sua experiência
                     conosco
                   </Text>
                 </VStack>
 
-                <Grid>
+                <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={{ base: 8, md: 10 }}>
                   {/* Coluna 1 - Primeiros 5 depoimentos */}
-                  <HStack spacing={6}>
+                  <Stack spacing={6}>
                     {testimonials.slice(0, 5).map((testimonial, index) => (
                       <MotionCard
                         key={index}
@@ -452,7 +455,7 @@ function Home() {
                         </CardBody>
                       </MotionCard>
                     ))}
-                  </HStack>
+                  </Stack>
 
                   {/* Coluna 2 - Últimos 5 depoimentos */}
                   <VStack spacing={6}>
@@ -501,18 +504,18 @@ function Home() {
         {/* Gallery Section */}
         <AnimatedSection>
           <Box py={20} px={{ base: 4, md: 8 }} bg="white">
-            <Container maxW="1200px">
+            <Container maxW={{ base: 'container.md', md: 'container.lg', xl: '1200px' }}>
               <VStack spacing={16}>
                 <VStack spacing={4} textAlign="center">
-                  <Heading size="xl" color="gray.800">
+                  <Heading fontSize={{ base: '2xl', md: '3xl' }} color="gray.800">
                     Nossa Galeria
                   </Heading>
-                  <Text fontSize="lg" color="gray.600" maxW="600px">
+                  <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" maxW="600px">
                     Momentos especiais capturados durante nossas atividades
                   </Text>
                 </VStack>
 
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
                   {galleryImages.map((image, index) => (
                     <MotionImage
                       key={index}
@@ -523,6 +526,10 @@ function Home() {
                       variants={fadeInUp}
                       {...scaleOnHover}
                       cursor="pointer"
+                      w="100%"
+                      h={{ base: '200px', md: '250px' }}
+                      objectFit="cover"
+                      onClick={() => handleImageClick(image)}
                     />
                   ))}
                 </SimpleGrid>
@@ -534,8 +541,8 @@ function Home() {
         {/* Contact Section */}
         <AnimatedSection>
           <Box py={20} px={{ base: 4, md: 8 }} bgGradient={bgGradient}>
-            <Container maxW="1200px">
-              <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12}>
+            <Container maxW={{ base: 'container.md', md: 'container.lg', xl: '1200px' }}>
+              <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={{ base: 8, md: 12 }}>
                 <VStack spacing={8} align="start">
                   <VStack spacing={4} align="start">
                     <Heading size="xl" color="gray.800">
