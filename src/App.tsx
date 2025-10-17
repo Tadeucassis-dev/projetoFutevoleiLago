@@ -13,7 +13,7 @@ import theme from './theme';
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider >
       <ErrorBoundary>
         <AuthProvider>
           <Routes>

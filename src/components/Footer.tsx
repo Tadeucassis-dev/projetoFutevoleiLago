@@ -17,7 +17,7 @@ function Footer() {
       <Flex justify="space-between" align="center" h="100%" maxW="1200px" mx="auto">
         {/* Logo à esquerda */}
         <Flex align="center" flex="1">
-          <Image src="../../public/logoftv1.png" alt="Logo" boxSize="120px" />
+          <Image src="/logoftv1.png" alt="Logo" boxSize="120px" />
         </Flex>
         
         {/* Nome centralizado */}

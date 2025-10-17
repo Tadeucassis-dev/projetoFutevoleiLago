@@ -223,7 +223,6 @@ function SaibaMais() {
                     <CardBody
                       textAlign="center"
                       p={8}
-                      bgColor={""}
                       bgColor={"yellow.300"}
                     >
                       <Icon
@@ -265,7 +264,7 @@ function SaibaMais() {
                     <CardBody
                       textAlign="center"
                       p={8}
-                      bgColor={""}
+  
                       bgColor={"yellow.300"}
                     >
                       {" "}
@@ -308,7 +307,7 @@ function SaibaMais() {
                     <CardBody
                       textAlign="center"
                       p={8}
-                      bgColor={""}
+  
                       bgColor={"yellow.300"}
                     >
                       {" "}
@@ -344,7 +343,7 @@ function SaibaMais() {
                     <CardBody
                       textAlign="center"
                       p={8}
-                      bgColor={""}
+  
                       bgColor={"yellow.300"}
                     >
                       {" "}
@@ -509,7 +508,7 @@ function SaibaMais() {
                             color={headingColor}
                             fontWeight="bold"
                             fontSize="lg"
-                            color="white"
+                            
                           >
                             Como posso inscrever meu filho no projeto?
                           </Text>
@@ -544,7 +543,7 @@ function SaibaMais() {
                             color={headingColor}
                             fontWeight="bold"
                             fontSize="lg"
-                            color="white"
+                            
                           >
                             Qual é a idade mínima e máxima para participar?
                           </Text>
@@ -578,7 +577,7 @@ function SaibaMais() {
                             color={headingColor}
                             fontWeight="bold"
                             fontSize="lg"
-                            color="white"
+                            
                           >
                             As aulas são gratuitas?
                           </Text>
@@ -612,7 +611,7 @@ function SaibaMais() {
                             color={headingColor}
                             fontWeight="bold"
                             fontSize="lg"
-                            color="white"
+                           
                           >
                             Quais materiais são necessários?
                           </Text>
@@ -640,7 +639,7 @@ function SaibaMais() {
                   <VStack spacing={6}>
                     <Heading size="lg" fontWeight="bold">
                       Pronto para Fazer Parte do{" "}
-                      <Text as="span" color="brand.500" color="yellow.500">
+                      <Text as="span" color="brand.500" >
                         Futevôlei do Lago?
                       </Text>
                     </Heading>

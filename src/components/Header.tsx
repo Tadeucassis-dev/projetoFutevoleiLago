@@ -25,7 +25,7 @@ function Header() {
       <Flex justify="space-between" align="center" h="100%" >
         {/* Logo à esquerda */}
         <Flex align="center" flex="1">
-          <Image src="../../public/logoftv1.png" alt="Logo" boxSize="120px" />
+          <Image src="/logoftv1.png" alt="Logo" boxSize="120px" />
         </Flex>
         
         {/* Nome centralizado */}
@@ -39,7 +39,9 @@ function Header() {
         <Flex align="center" justify="flex-end" flex="1">
           {user && (
             <>
-              <Box mr={4} color="white" fontSize="sm">Bem-vindo, {user.email}</Box>
+              <Box mr={4} color="white" fontSize="sm">
+                Bem-vindo, {user.name ?? user.email}
+              </Box>
               <Button onClick={logout} mr={2} variant="outline" size="sm">
                 Sair
               </Button>
