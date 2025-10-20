@@ -499,7 +499,7 @@ function SaibaMais() {
                     >
                       <AccordionButton
                         color="white"
-                        bgColor={"gray.600"}
+                        bgColor={"yellow.300"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
@@ -534,7 +534,7 @@ function SaibaMais() {
                     >
                       <AccordionButton
                         color="white"
-                        bgColor={"gray.600"}
+                        bgColor={"yellow.300"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
@@ -568,7 +568,7 @@ function SaibaMais() {
                     >
                       <AccordionButton
                         color="white"
-                        bgColor={"gray.600"}
+                        bgColor={"yellow.300"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
@@ -602,7 +602,7 @@ function SaibaMais() {
                     >
                       <AccordionButton
                         color="white"
-                        bgColor={"gray.600"}
+                        bgColor={"yellow.300"}
                         _hover={{ bg: "brand.50" }}
                         py={4}
                       >
