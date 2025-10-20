@@ -30,7 +30,7 @@ function Header() {
         
         {/* Nome centralizado */}
         <Flex justify="center" flex="2" minW={0}>
-          <Heading color="white" textAlign="center" fontSize={{ base: 'sm', sm: 'md', md: 'xl' }} noOfLines={1}>
+          <Heading color="white" textAlign="center" fontSize={{ base: 'sm', sm: 'md', md: '2xl' }} noOfLines={1}>
             Projeto Futevôlei do Lago
           </Heading>
         </Flex>
